@@ -23,6 +23,56 @@ class BotHandlers:
         """
         self.transit_service = transit_service
 
+    def _split_message(self, text: str, max_length: int = 4000) -> list:
+        """
+        Split long message into chunks respecting Telegram limits.
+
+        Args:
+            text: Message text to split
+            max_length: Maximum length per chunk
+
+        Returns:
+            List of message chunks
+        """
+        if len(text) <= max_length:
+            return [text]
+
+        # Try to split by double newline (sections)
+        sections = text.split("\n\n")
+        chunks = []
+        current_chunk = ""
+
+        for section in sections:
+            if len(current_chunk) + len(section) + 2 <= max_length:
+                if current_chunk:
+                    current_chunk += "\n\n" + section
+                else:
+                    current_chunk = section
+            else:
+                if current_chunk:
+                    chunks.append(current_chunk)
+                current_chunk = section
+
+                # If single section is too long, split by lines
+                if len(section) > max_length:
+                    lines = section.split("\n")
+                    current_chunk = ""
+                    for line in lines:
+                        if len(current_chunk) + len(line) + 1 <= max_length:
+                            if current_chunk:
+                                current_chunk += "\n" + line
+                            else:
+                                current_chunk = line
+                        else:
+                            if current_chunk:
+                                chunks.append(current_chunk)
+                            current_chunk = line
+
+        if current_chunk:
+            chunks.append(current_chunk)
+
+        return chunks
+
     async def start_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         """
         Handle /start command.
@@ -104,13 +154,20 @@ class BotHandlers:
             # Delete processing message
             await processing_msg.delete()
 
-            # Send report
-            await update.message.reply_text(report, parse_mode=ParseMode.MARKDOWN)
+            # Split long messages (Telegram limit is 4096 characters)
+            if len(report) <= 4096:
+                await update.message.reply_text(report, parse_mode=ParseMode.MARKDOWN)
+            else:
+                # Split into multiple messages
+                messages = self._split_message(report, max_length=4000)
+                for msg in messages:
+                    await update.message.reply_text(msg, parse_mode=ParseMode.MARKDOWN)
 
         except Exception as e:
-            logger.error(f"Error processing transit command: {str(e)}")
+            logger.error(f"Error processing transit command: {str(e)}", exc_info=True)
             await processing_msg.edit_text(
                 f"❌ Произошла ошибка при расчете транзита.\n\n"
+                f"Детали: {str(e)}\n\n"
                 f"Пожалуйста, попробуйте позже или обратитесь к администратору."
             )
 

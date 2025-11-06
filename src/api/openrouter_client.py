@@ -4,6 +4,7 @@ import logging
 from typing import List, Dict, Optional
 
 from openai import OpenAI
+import httpx
 
 
 logger = logging.getLogger(__name__)
@@ -25,9 +26,17 @@ class OpenRouterClient:
             model: Model to use (default: Claude 3.5 Sonnet)
         """
         self.model = model
+        
+        # Create HTTP client without proxies to avoid conflicts
+        http_client = httpx.Client(
+            timeout=60.0,
+            limits=httpx.Limits(max_keepalive_connections=5, max_connections=10)
+        )
+        
         self.client = OpenAI(
             base_url="https://openrouter.ai/api/v1",
             api_key=api_key,
+            http_client=http_client,
         )
 
     def generate_completion(
@@ -48,6 +57,7 @@ class OpenRouterClient:
             Generated text response
         """
         try:
+            logger.info(f"Calling OpenRouter API with model {self.model}")
             response = self.client.chat.completions.create(
                 model=self.model,
                 messages=messages,
@@ -55,9 +65,11 @@ class OpenRouterClient:
                 max_tokens=max_tokens,
             )
 
-            return response.choices[0].message.content
+            content = response.choices[0].message.content
+            logger.info(f"Received response: {len(content)} characters")
+            return content
 
         except Exception as e:
-            logger.error(f"Error generating completion: {str(e)}")
+            logger.error(f"Error generating completion: {str(e)}", exc_info=True)
             raise
 
