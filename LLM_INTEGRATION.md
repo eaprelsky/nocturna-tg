@@ -2,7 +2,7 @@
 
 ## Обзор
 
-Бот использует OpenRouter для генерации астрологических интерпретаций через LLM (Large Language Model). По умолчанию используется Claude 3.5 Sonnet от Anthropic.
+Бот использует OpenRouter для генерации астрологических интерпретаций через LLM (Large Language Model). По умолчанию используется Claude Haiku 4.5 от Anthropic.
 
 ## Возможности
 
@@ -25,7 +25,7 @@
 
 ```bash
 OPENROUTER_API_KEY=sk-or-v1-ваш_ключ_здесь
-OPENROUTER_MODEL=anthropic/claude-3.5-sonnet
+OPENROUTER_MODEL=anthropic/claude-haiku-4.5
 ```
 
 ### 3. Установите зависимости
@@ -40,9 +40,9 @@ pip install -r requirements.txt
 
 ### Рекомендуемые модели:
 
-- `anthropic/claude-3.5-sonnet` - **Лучший баланс качества и цены** ⭐
+- `anthropic/claude-haiku-4.5` - **Быстрая и эффективная** ⭐ (используется по умолчанию)
+- `anthropic/claude-3.5-sonnet` - Лучший баланс качества и цены
 - `anthropic/claude-3-opus` - Максимальное качество (дороже)
-- `anthropic/claude-3-haiku` - Быстрая и дешевая
 - `google/gemini-pro-1.5` - Хорошее качество, низкая цена
 - `openai/gpt-4-turbo` - OpenAI GPT-4
 
@@ -75,13 +75,13 @@ OPENROUTER_MODEL=google/gemini-pro-1.5
 
 | Модель | Цена за запрос | Качество |
 |--------|----------------|----------|
+| Claude Haiku 4.5 | $0.001-0.003 | ⭐⭐⭐⭐ |
 | Claude 3.5 Sonnet | $0.01-0.02 | ⭐⭐⭐⭐⭐ |
 | Claude 3 Opus | $0.03-0.05 | ⭐⭐⭐⭐⭐ |
-| Claude 3 Haiku | $0.001-0.002 | ⭐⭐⭐ |
 | Gemini Pro 1.5 | $0.001-0.003 | ⭐⭐⭐⭐ |
 | GPT-4 Turbo | $0.02-0.03 | ⭐⭐⭐⭐ |
 
-*На $5 можно сделать 250-500 запросов с Claude 3.5 Sonnet*
+*На $5 можно сделать 1500-5000 запросов с Claude Haiku 4.5*
 
 ## Работа без LLM
 
@@ -164,7 +164,7 @@ interpretation = self.openrouter_client.generate_completion(
 - См. список на openrouter.ai/models
 
 ### Плохое качество интерпретаций
-- Попробуйте другую модель (Claude 3.5 Sonnet рекомендуется)
+- Попробуйте более мощную модель (Claude 3.5 Sonnet для лучшего качества)
 - Измените temperature (попробуйте 0.5-0.8)
 
 ## Дальнейшее развитие

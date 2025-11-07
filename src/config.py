@@ -24,7 +24,7 @@ class Settings(BaseSettings):
     # OpenRouter Configuration
     openrouter_api_key: Optional[str] = Field(None, alias="OPENROUTER_API_KEY")
     openrouter_model: str = Field(
-        default="anthropic/claude-3.5-sonnet", alias="OPENROUTER_MODEL"
+        default="anthropic/claude-haiku-4.5", alias="OPENROUTER_MODEL"
     )
 
     # Application Settings

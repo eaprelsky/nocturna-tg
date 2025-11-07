@@ -17,13 +17,13 @@ class OpenRouterClient:
     Uses OpenAI SDK with custom base URL for OpenRouter.
     """
 
-    def __init__(self, api_key: str, model: str = "anthropic/claude-3.5-sonnet"):
+    def __init__(self, api_key: str, model: str = "anthropic/claude-haiku-4.5"):
         """
         Initialize OpenRouter client.
 
         Args:
             api_key: OpenRouter API key
-            model: Model to use (default: Claude 3.5 Sonnet)
+            model: Model to use (default: Claude Haiku 4.5)
         """
         self.model = model
         
