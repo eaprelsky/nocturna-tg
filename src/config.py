@@ -3,7 +3,7 @@
 import os
 from typing import Optional
 from pydantic_settings import BaseSettings
-from pydantic import Field
+from pydantic import Field, ConfigDict
 
 
 class Settings(BaseSettings):
@@ -27,16 +27,23 @@ class Settings(BaseSettings):
         default="anthropic/claude-haiku-4.5", alias="OPENROUTER_MODEL"
     )
 
+    # Chart Service Configuration
+    chart_service_url: str = Field(
+        default="http://localhost:3011", alias="CHART_SERVICE_URL"
+    )
+    chart_service_api_key: Optional[str] = Field(None, alias="NOCTURNA_IMAGE_SERVICE_TOKEN")
+    chart_service_timeout: int = Field(default=60, alias="CHART_SERVICE_TIMEOUT")
+
     # Application Settings
     log_level: str = Field(default="INFO", alias="LOG_LEVEL")
     timezone: str = Field(default="Europe/Moscow", alias="TIMEZONE")
 
-    class Config:
-        """Pydantic configuration."""
-
-        env_file = ".env"
-        env_file_encoding = "utf-8"
-        case_sensitive = False
+    model_config = ConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        case_sensitive=False,
+        extra="ignore",  # Ignore extra fields from environment
+    )
 
     def validate(self) -> None:
         """Validate configuration settings."""

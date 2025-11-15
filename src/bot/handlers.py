@@ -1,11 +1,16 @@
 """Telegram bot command handlers."""
 
 import logging
+from io import BytesIO
 from telegram import Update
 from telegram.ext import ContextTypes
 from telegram.constants import ParseMode
 
 from src.services.transit_service import TransitService
+from src.services.chart_service import ChartService
+from src.api.chart_service_client import ChartServiceError
+from src.formatters.russian_formatter import RussianFormatter
+from typing import Optional
 
 
 logger = logging.getLogger(__name__)
@@ -14,14 +19,17 @@ logger = logging.getLogger(__name__)
 class BotHandlers:
     """Handles Telegram bot commands and interactions."""
 
-    def __init__(self, transit_service: TransitService):
+    def __init__(self, transit_service: TransitService, chart_service: Optional[ChartService] = None):
         """
         Initialize bot handlers.
 
         Args:
             transit_service: Service for transit calculations
+            chart_service: Service for chart image generation (optional)
         """
         self.transit_service = transit_service
+        self.chart_service = chart_service
+        self.formatter = RussianFormatter()
 
     def _split_message(self, text: str, max_length: int = 4000) -> list:
         """
@@ -90,9 +98,12 @@ class BotHandlers:
             "*Мои возможности:*\n"
             "• Текущие позиции планет\n"
             "• Анализ аспектов между планетами\n"
-            "• Транзиты в реальном времени\n\n"
+            "• Транзиты в реальном времени\n"
+            "• Визуализация карт\n\n"
             "*Доступные команды:*\n"
-            "/transit \\- Получить текущий транзит планет\n"
+            "/transit \\- Изображение текущей карты транзитов\n"
+            "/transit_planets \\- Список текущих позиций планет\n"
+            "/transit_aspects \\- Список текущих аспектов\n"
             "/help \\- Справка по командам\n\n"
             "Нажми /transit, чтобы начать\\!"
         )
@@ -114,7 +125,9 @@ class BotHandlers:
         help_message = (
             "📚 *Справка по командам*\n\n"
             "*Основные команды:*\n"
-            "/transit \\- Текущие позиции планет и аспекты\n"
+            "/transit \\- Изображение текущей карты транзитов\n"
+            "/transit_planets \\- Текстовый список текущих позиций планет\n"
+            "/transit_aspects \\- Текстовый список текущих аспектов\n"
             "/help \\- Показать эту справку\n\n"
             "*О боте:*\n"
             "Бот использует сервер расчетов Nocturna для получения точных "
@@ -133,21 +146,62 @@ class BotHandlers:
         self, update: Update, context: ContextTypes.DEFAULT_TYPE
     ) -> None:
         """
-        Handle /transit command.
+        Handle /transit command - generate chart image or fallback to text report.
 
         Args:
             update: Telegram update object
             context: Telegram context object
         """
         user_id = update.effective_user.id
-        logger.info(f"User {user_id} requested transit")
+        logger.info(f"User {user_id} requested transit chart")
 
         # Send "calculating" message
         processing_msg = await update.message.reply_text(
-            "⏳ Рассчитываю текущий транзит планет..."
+            "⏳ Генерирую изображение текущей карты транзитов..."
         )
 
         try:
+            # Try to generate chart image if service is available
+            if self.chart_service:
+                try:
+                    image_bytes = self.chart_service.generate_current_transit_chart()
+
+                    # Delete processing message
+                    await processing_msg.delete()
+
+                    # Send image
+                    await update.message.reply_photo(
+                        photo=BytesIO(image_bytes),
+                        caption="🌟 Текущая карта транзитов\n\n"
+                        "Используйте /transit_planets для списка планет\n"
+                        "Используйте /transit_aspects для списка аспектов",
+                    )
+
+                    # Try to get and send interpretation
+                    interpretation = self.transit_service.get_interpretation()
+                    if interpretation:
+                        interpretation_text = f"📖 *Интерпретация:*\n\n{interpretation}"
+                        # Split if too long
+                        if len(interpretation_text) <= 4096:
+                            await update.message.reply_text(
+                                interpretation_text, parse_mode=ParseMode.MARKDOWN
+                            )
+                        else:
+                            messages = self._split_message(interpretation_text, max_length=4000)
+                            for msg in messages:
+                                await update.message.reply_text(msg, parse_mode=ParseMode.MARKDOWN)
+
+                    return
+                except ChartServiceError as e:
+                    logger.warning(f"Chart service error, falling back to text: {str(e)}")
+                    # Fall through to text report
+                except Exception as e:
+                    logger.warning(f"Error generating chart image, falling back to text: {str(e)}")
+                    # Fall through to text report
+
+            # Fallback to text report if image generation failed or unavailable
+            await processing_msg.edit_text("⏳ Рассчитываю текущий транзит планет...")
+
             # Get transit report
             report = self.transit_service.get_current_transit()
 
@@ -167,6 +221,84 @@ class BotHandlers:
             logger.error(f"Error processing transit command: {str(e)}", exc_info=True)
             await processing_msg.edit_text(
                 f"❌ Произошла ошибка при расчете транзита.\n\n"
+                f"Детали: {str(e)}\n\n"
+                f"Пожалуйста, попробуйте позже или обратитесь к администратору."
+            )
+
+    async def transit_planets_command(
+        self, update: Update, context: ContextTypes.DEFAULT_TYPE
+    ) -> None:
+        """
+        Handle /transit_planets command - show planetary positions.
+
+        Args:
+            update: Telegram update object
+            context: Telegram context object
+        """
+        user_id = update.effective_user.id
+        logger.info(f"User {user_id} requested transit planets")
+
+        # Send "calculating" message
+        processing_msg = await update.message.reply_text(
+            "⏳ Рассчитываю текущие позиции планет..."
+        )
+
+        try:
+            # Get positions
+            positions = self.transit_service.get_current_positions()
+
+            # Delete processing message
+            await processing_msg.delete()
+
+            # Format positions
+            positions_text = self.formatter.format_positions_list(positions)
+
+            # Send message
+            await update.message.reply_text(positions_text, parse_mode=ParseMode.MARKDOWN)
+
+        except Exception as e:
+            logger.error(f"Error processing transit_planets command: {str(e)}", exc_info=True)
+            await processing_msg.edit_text(
+                f"❌ Произошла ошибка при расчете позиций планет.\n\n"
+                f"Детали: {str(e)}\n\n"
+                f"Пожалуйста, попробуйте позже или обратитесь к администратору."
+            )
+
+    async def transit_aspects_command(
+        self, update: Update, context: ContextTypes.DEFAULT_TYPE
+    ) -> None:
+        """
+        Handle /transit_aspects command - show planetary aspects.
+
+        Args:
+            update: Telegram update object
+            context: Telegram context object
+        """
+        user_id = update.effective_user.id
+        logger.info(f"User {user_id} requested transit aspects")
+
+        # Send "calculating" message
+        processing_msg = await update.message.reply_text(
+            "⏳ Рассчитываю текущие аспекты..."
+        )
+
+        try:
+            # Get aspects
+            aspects = self.transit_service.get_current_aspects()
+
+            # Delete processing message
+            await processing_msg.delete()
+
+            # Format aspects
+            aspects_text = self.formatter.format_aspects_list(aspects)
+
+            # Send message
+            await update.message.reply_text(aspects_text, parse_mode=ParseMode.MARKDOWN)
+
+        except Exception as e:
+            logger.error(f"Error processing transit_aspects command: {str(e)}", exc_info=True)
+            await processing_msg.edit_text(
+                f"❌ Произошла ошибка при расчете аспектов.\n\n"
                 f"Детали: {str(e)}\n\n"
                 f"Пожалуйста, попробуйте позже или обратитесь к администратору."
             )

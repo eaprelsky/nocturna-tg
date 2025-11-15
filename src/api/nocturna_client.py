@@ -243,3 +243,52 @@ class NocturnaClient:
             # Direct format - return as is
             return response
 
+    def calculate_houses(
+        self,
+        date: str,
+        time: str,
+        latitude: float,
+        longitude: float,
+        timezone: str,
+        house_system: str = "PLACIDUS",
+        include_angles: bool = True,
+    ) -> Dict[str, Any]:
+        """
+        Calculate house cusps.
+
+        Args:
+            date: Date in YYYY-MM-DD format
+            time: Time in HH:MM:SS format
+            latitude: Geographic latitude in degrees
+            longitude: Geographic longitude in degrees
+            timezone: Timezone string
+            house_system: House system (default: PLACIDUS)
+            include_angles: Include angles (ASC, MC, etc.)
+
+        Returns:
+            Dictionary with houses data
+        """
+        payload = {
+            "date": date,
+            "time": time,
+            "latitude": latitude,
+            "longitude": longitude,
+            "timezone": timezone,
+            "house_system": house_system,
+            "include_angles": include_angles,
+        }
+
+        response = self._make_request("POST", "/calculations/houses", json=payload)
+
+        # Direct calculations endpoint returns data directly without wrapper
+        # Check if response has 'success' field (wrapped format) or direct data
+        if "success" in response:
+            if response.get("success"):
+                return response.get("data", {})
+            else:
+                error = response.get("error", {})
+                raise NocturnaAPIError(f"API error: {error.get('message', 'Unknown error')}")
+        else:
+            # Direct format - return as is
+            return response
+
