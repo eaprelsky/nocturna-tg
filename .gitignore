@@ -19,8 +19,7 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
-logs/
-
+logs
 # Virtual environments
 venv/
 ENV/
@@ -56,4 +55,12 @@ logs/
 .pytest_cache/
 .coverage
 htmlcov/
+
+# Test files and artifacts
+test_*.py
+test_*.png
+test_*.jpg
+
+# Docker
+.dockerignore
 

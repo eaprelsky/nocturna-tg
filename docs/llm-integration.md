@@ -1,4 +1,4 @@
-# LLM Integration Guide
+# Интеграция с LLM
 
 ## Обзор
 
