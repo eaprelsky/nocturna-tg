@@ -75,6 +75,9 @@ def main() -> None:
         logger.info("Loading configuration...")
         settings = get_settings()
 
+        # Set logging level based on settings
+        logging.getLogger().setLevel(settings.log_level.upper())
+
         # Check service token expiration
         if settings.nocturna_service_token:
             check_token_expiry(settings.nocturna_service_token)

@@ -71,9 +71,11 @@ class ChartService:
             if chart_planet_name:
                 longitude = pos.get("longitude", 0.0)
                 latitude = pos.get("latitude", 0.0)
+                retrograde = pos.get("is_retrograde", False) # Get retrograde status from Nocturna API
                 planets_dict[chart_planet_name] = {
                     "lon": longitude,
                     "lat": latitude,
+                    "retrograde": retrograde, # Add retrograde to dictionary
                 }
         return planets_dict
 
@@ -143,6 +145,8 @@ class ChartService:
             positions = positions_data.get("positions", [])
             houses = houses_data.get("houses", [])
 
+            logger.debug(f"Received positions from Nocturna API: {positions}")
+
             if not positions:
                 raise ChartServiceError("No planetary positions received from API")
 
@@ -152,6 +156,8 @@ class ChartService:
             # Convert to chart service format
             planets_dict = self._convert_planets_to_chart_format(positions)
             houses_list = self._convert_houses_to_chart_format(houses)
+
+            logger.debug(f"Converted planets for chart service: {planets_dict}")
 
             # Render chart
             image_bytes = self.chart_service_client.render_chart(

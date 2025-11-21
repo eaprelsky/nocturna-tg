@@ -1,0 +1,861 @@
+{
+  "info": {
+    "name": "Nocturna SaaS Backend API",
+    "description": "API collection for Nocturna SaaS Backend",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"user@example.com\",\n    \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            },
+            "description": "Authenticate user and return JWT tokens"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"email\": \"user@example.com\",\n    \"password\": \"password123\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/auth/login",
+                  "host": ["{{base_url}}"],
+                  "path": ["auth", "login"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n    \"access_token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...\",\n    \"refresh_token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...\",\n    \"token_type\": \"bearer\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"refresh_token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/refresh",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "refresh"]
+            },
+            "description": "Get new access token using refresh token"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"refresh_token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/auth/refresh",
+                  "host": ["{{base_url}}"],
+                  "path": ["auth", "refresh"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n    \"access_token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...\",\n    \"token_type\": \"bearer\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"refresh_token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/logout",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "logou"]
+            },
+            "description": "Invalidate refresh token"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"refresh_token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/auth/logout",
+                  "host": ["{{base_url}}"],
+                  "path": ["auth", "logout"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n    \"message\": \"Successfully logged out\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/me",
+              "host": ["{{base_url}}"],
+              "path": ["users", "me"]
+            },
+            "description": "Get information about the currently authenticated user"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/users/me",
+                  "host": ["{{base_url}}"],
+                  "path": ["users", "me"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n    \"id\": \"123e4567-e89b-12d3-a456-426614174000\",\n    \"email\": \"user@example.com\",\n    \"name\": \"John Doe\",\n    \"created_at\": \"2024-01-01T00:00:00Z\",\n    \"updated_at\": \"2024-01-01T00:00:00Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update Current User",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"John Smith\",\n    \"preferences\": {\n        \"language\": \"en\",\n        \"timezone\": \"UTC\"\n    }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/me",
+              "host": ["{{base_url}}"],
+              "path": ["users", "me"]
+            },
+            "description": "Update information about the currently authenticated user"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"John Smith\",\n    \"preferences\": {\n        \"language\": \"en\",\n        \"timezone\": \"UTC\"\n    }\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/users/me",
+                  "host": ["{{base_url}}"],
+                  "path": ["users", "me"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n    \"id\": \"123e4567-e89b-12d3-a456-426614174000\",\n    \"email\": \"user@example.com\",\n    \"name\": \"John Smith\",\n    \"preferences\": {\n        \"language\": \"en\",\n        \"timezone\": \"UTC\"\n    },\n    \"created_at\": \"2024-01-01T00:00:00Z\",\n    \"updated_at\": \"2024-01-01T00:00:00Z\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Charts",
+      "item": [
+        {
+          "name": "Create Chart",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Birth Chart\",\n    \"birth_date\": \"1990-01-01T00:00:00Z\",\n    \"birth_place\": {\n        \"latitude\": 51.5074,\n        \"longitude\": -0.1278,\n        \"name\": \"London, UK\"\n    },\n    \"chart_type\": \"birth\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/charts",
+              "host": ["{{base_url}}"],
+              "path": ["charts"]
+            },
+            "description": "Create a new astrological chart"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"Birth Chart\",\n    \"birth_date\": \"1990-01-01T00:00:00Z\",\n    \"birth_place\": {\n        \"latitude\": 51.5074,\n        \"longitude\": -0.1278,\n        \"name\": \"London, UK\"\n    },\n    \"chart_type\": \"birth\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/charts",
+                  "host": ["{{base_url}}"],
+                  "path": ["charts"]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n    \"id\": \"123e4567-e89b-12d3-a456-426614174000\",\n    \"name\": \"Birth Chart\",\n    \"birth_date\": \"1990-01-01T00:00:00Z\",\n    \"birth_place\": {\n        \"latitude\": 51.5074,\n        \"longitude\": -0.1278,\n        \"name\": \"London, UK\"\n    },\n    \"chart_type\": \"birth\",\n    \"created_at\": \"2024-01-01T00:00:00Z\",\n    \"updated_at\": \"2024-01-01T00:00:00Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "List Charts",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/charts?page=1&per_page=10&chart_type=birth&sort_by=created_at&sort_order=desc",
+              "host": ["{{base_url}}"],
+              "path": ["charts"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "per_page",
+                  "value": "10"
+                },
+                {
+                  "key": "chart_type",
+                  "value": "birth"
+                },
+                {
+                  "key": "sort_by",
+                  "value": "created_at"
+                },
+                {
+                  "key": "sort_order",
+                  "value": "desc"
+                }
+              ]
+            },
+            "description": "Get a list of user's charts"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/charts?page=1&per_page=10&chart_type=birth&sort_by=created_at&sort_order=desc",
+                  "host": ["{{base_url}}"],
+                  "path": ["charts"],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "10"
+                    },
+                    {
+                      "key": "chart_type",
+                      "value": "birth"
+                    },
+                    {
+                      "key": "sort_by",
+                      "value": "created_at"
+                    },
+                    {
+                      "key": "sort_order",
+                      "value": "desc"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n    \"items\": [\n        {\n            \"id\": \"123e4567-e89b-12d3-a456-426614174000\",\n            \"name\": \"Birth Chart\",\n            \"chart_type\": \"birth\",\n            \"created_at\": \"2024-01-01T00:00:00Z\"\n        }\n    ],\n    \"total\": 100,\n    \"page\": 1,\n    \"per_page\": 10,\n    \"pages\": 10\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Chart",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/charts/{{chart_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["charts", "{{chart_id}}"]
+            },
+            "description": "Get information about a specific chart"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/charts/{{chart_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["charts", "{{chart_id}}"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n    \"id\": \"123e4567-e89b-12d3-a456-426614174000\",\n    \"name\": \"Birth Chart\",\n    \"birth_date\": \"1990-01-01T00:00:00Z\",\n    \"birth_place\": {\n        \"latitude\": 51.5074,\n        \"longitude\": -0.1278,\n        \"name\": \"London, UK\"\n    },\n    \"chart_type\": \"birth\",\n    \"planets\": [\n        {\n            \"name\": \"Sun\",\n            \"sign\": \"Capricorn\",\n            \"degree\": 10.5,\n            \"house\": 1\n        }\n    ],\n    \"houses\": [\n        {\n            \"number\": 1,\n            \"sign\": \"Capricorn\",\n            \"degree\": 0.0\n        }\n    ],\n    \"created_at\": \"2024-01-01T00:00:00Z\",\n    \"updated_at\": \"2024-01-01T00:00:00Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update Chart",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Updated Chart Name\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/charts/{{chart_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["charts", "{{chart_id}}"]
+            },
+            "description": "Update information about a specific chart"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"Updated Chart Name\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/charts/{{chart_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["charts", "{{chart_id}}"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n    \"id\": \"123e4567-e89b-12d3-a456-426614174000\",\n    \"name\": \"Updated Chart Name\",\n    \"birth_date\": \"1990-01-01T00:00:00Z\",\n    \"birth_place\": {\n        \"latitude\": 51.5074,\n        \"longitude\": -0.1278,\n        \"name\": \"London, UK\"\n    },\n    \"chart_type\": \"birth\",\n    \"created_at\": \"2024-01-01T00:00:00Z\",\n    \"updated_at\": \"2024-01-01T00:00:00Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete Chart",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/charts/{{chart_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["charts", "{{chart_id}}"]
+            },
+            "description": "Delete a specific chart"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/charts/{{chart_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["charts", "{{chart_id}}"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n    \"message\": \"Chart deleted successfully\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Interpretations",
+      "item": [
+        {
+          "name": "Create Interpretation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"type\": \"birth_chart\",\n    \"language\": \"en\",\n    \"style\": \"detailed\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/charts/{{chart_id}}/interpretations",
+              "host": ["{{base_url}}"],
+              "path": ["charts", "{{chart_id}}", "interpretations"]
+            },
+            "description": "Create a new interpretation for a chart"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"type\": \"birth_chart\",\n    \"language\": \"en\",\n    \"style\": \"detailed\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/charts/{{chart_id}}/interpretations",
+                  "host": ["{{base_url}}"],
+                  "path": ["charts", "{{chart_id}}", "interpretations"]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n    \"id\": \"123e4567-e89b-12d3-a456-426614174000\",\n    \"chart_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n    \"type\": \"birth_chart\",\n    \"language\": \"en\",\n    \"style\": \"detailed\",\n    \"status\": \"processing\",\n    \"created_at\": \"2024-01-01T00:00:00Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "List Interpretations",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/charts/{{chart_id}}/interpretations?page=1&per_page=10&type=birth_chart&status=completed&sort_by=created_at&sort_order=desc",
+              "host": ["{{base_url}}"],
+              "path": ["charts", "{{chart_id}}", "interpretations"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "per_page",
+                  "value": "10"
+                },
+                {
+                  "key": "type",
+                  "value": "birth_chart"
+                },
+                {
+                  "key": "status",
+                  "value": "completed"
+                },
+                {
+                  "key": "sort_by",
+                  "value": "created_at"
+                },
+                {
+                  "key": "sort_order",
+                  "value": "desc"
+                }
+              ]
+            },
+            "description": "Get a list of interpretations for a chart"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/charts/{{chart_id}}/interpretations?page=1&per_page=10&type=birth_chart&status=completed&sort_by=created_at&sort_order=desc",
+                  "host": ["{{base_url}}"],
+                  "path": ["charts", "{{chart_id}}", "interpretations"],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "10"
+                    },
+                    {
+                      "key": "type",
+                      "value": "birth_chart"
+                    },
+                    {
+                      "key": "status",
+                      "value": "completed"
+                    },
+                    {
+                      "key": "sort_by",
+                      "value": "created_at"
+                    },
+                    {
+                      "key": "sort_order",
+                      "value": "desc"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n    \"items\": [\n        {\n            \"id\": \"123e4567-e89b-12d3-a456-426614174000\",\n            \"type\": \"birth_chart\",\n            \"language\": \"en\",\n            \"style\": \"detailed\",\n            \"status\": \"completed\",\n            \"created_at\": \"2024-01-01T00:00:00Z\"\n        }\n    ],\n    \"total\": 100,\n    \"page\": 1,\n    \"per_page\": 10,\n    \"pages\": 10\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Interpretation",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/interpretations/{{interpretation_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["interpretations", "{{interpretation_id}}"]
+            },
+            "description": "Get information about a specific interpretation"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/interpretations/{{interpretation_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["interpretations", "{{interpretation_id}}"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n    \"id\": \"123e4567-e89b-12d3-a456-426614174000\",\n    \"chart_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n    \"type\": \"birth_chart\",\n    \"language\": \"en\",\n    \"style\": \"detailed\",\n    \"status\": \"completed\",\n    \"content\": {\n        \"sections\": [\n            {\n                \"title\": \"Sun Sign\",\n                \"content\": \"Your Sun is in Capricorn...\"\n            }\n        ]\n    },\n    \"created_at\": \"2024-01-01T00:00:00Z\",\n    \"updated_at\": \"2024-01-01T00:00:00Z\"\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000/api/v1",
+      "type": "string"
+    },
+    {
+      "key": "access_token",
+      "value": "your-access-token",
+      "type": "string"
+    },
+    {
+      "key": "chart_id",
+      "value": "your-chart-id",
+      "type": "string"
+    },
+    {
+      "key": "interpretation_id",
+      "value": "your-interpretation-id",
+      "type": "string"
+    }
+  ]
+} 

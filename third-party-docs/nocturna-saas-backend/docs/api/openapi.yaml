@@ -1,0 +1,791 @@
+openapi: 3.0.0
+info:
+  title: Nocturna SaaS Backend API
+  description: API for Nocturna SaaS Backend
+  version: 1.0.0
+  contact:
+    name: Nocturna Support
+    email: support@nocturna.com
+    url: https://nocturna.com/support
+
+servers:
+  - url: http://localhost:8000/api/v1
+    description: Development server
+  - url: https://api.nocturna.com/api/v1
+    description: Production server
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+              example: VALIDATION_ERROR
+            message:
+              type: string
+              example: Invalid input data
+            details:
+              type: object
+              example:
+                field: Invalid value
+
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-426614174000
+        email:
+          type: string
+          format: email
+          example: user@example.com
+        name:
+          type: string
+          example: John Doe
+        created_at:
+          type: string
+          format: date-time
+          example: 2024-01-01T00:00:00Z
+        updated_at:
+          type: string
+          format: date-time
+          example: 2024-01-01T00:00:00Z
+
+    Chart:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-426614174000
+        name:
+          type: string
+          example: Birth Chart
+        birth_date:
+          type: string
+          format: date-time
+          example: 1990-01-01T00:00:00Z
+        birth_place:
+          type: object
+          properties:
+            latitude:
+              type: number
+              format: float
+              example: 51.5074
+            longitude:
+              type: number
+              format: float
+              example: -0.1278
+            name:
+              type: string
+              example: London, UK
+        chart_type:
+          type: string
+          enum: [birth, synastry, transit]
+          example: birth
+        created_at:
+          type: string
+          format: date-time
+          example: 2024-01-01T00:00:00Z
+        updated_at:
+          type: string
+          format: date-time
+          example: 2024-01-01T00:00:00Z
+
+    Interpretation:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-426614174000
+        chart_id:
+          type: string
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-426614174000
+        type:
+          type: string
+          enum: [birth_chart, synastry, transit]
+          example: birth_chart
+        language:
+          type: string
+          enum: [en, ru]
+          example: en
+        style:
+          type: string
+          enum: [detailed, concise]
+          example: detailed
+        status:
+          type: string
+          enum: [processing, completed, failed]
+          example: completed
+        content:
+          type: object
+          properties:
+            sections:
+              type: array
+              items:
+                type: object
+                properties:
+                  title:
+                    type: string
+                    example: Sun Sign
+                  content:
+                    type: string
+                    example: Your Sun is in Capricorn...
+        created_at:
+          type: string
+          format: date-time
+          example: 2024-01-01T00:00:00Z
+        updated_at:
+          type: string
+          format: date-time
+          example: 2024-01-01T00:00:00Z
+
+    PaginatedResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+        total:
+          type: integer
+          example: 100
+        page:
+          type: integer
+          example: 1
+        per_page:
+          type: integer
+          example: 10
+        pages:
+          type: integer
+          example: 10
+
+paths:
+  /auth/login:
+    post:
+      summary: Login user
+      description: Authenticate user and return JWT tokens
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+                password:
+                  type: string
+                  format: password
+                  example: password123
+              required:
+                - email
+                - password
+      responses:
+        '200':
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                    example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...
+                  refresh_token:
+                    type: string
+                    example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...
+                  token_type:
+                    type: string
+                    example: bearer
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/refresh:
+    post:
+      summary: Refresh access token
+      description: Get new access token using refresh token
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refresh_token:
+                  type: string
+                  example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...
+              required:
+                - refresh_token
+      responses:
+        '200':
+          description: Successful token refresh
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                    example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...
+                  token_type:
+                    type: string
+                    example: bearer
+        '401':
+          description: Invalid refresh token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/logout:
+    post:
+      summary: Logout user
+      description: Invalidate refresh token
+      tags:
+        - Authentication
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refresh_token:
+                  type: string
+                  example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...
+              required:
+                - refresh_token
+      responses:
+        '200':
+          description: Successful logout
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Successfully logged out
+        '401':
+          description: Invalid token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /users/me:
+    get:
+      summary: Get current user
+      description: Get information about the currently authenticated user
+      tags:
+        - Users
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: User information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    patch:
+      summary: Update current user
+      description: Update information about the currently authenticated user
+      tags:
+        - Users
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: John Smith
+                preferences:
+                  type: object
+                  properties:
+                    language:
+                      type: string
+                      enum: [en, ru]
+                      example: en
+                    timezone:
+                      type: string
+                      example: UTC
+      responses:
+        '200':
+          description: Updated user information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /charts:
+    post:
+      summary: Create chart
+      description: Create a new astrological chart
+      tags:
+        - Charts
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Birth Chart
+                birth_date:
+                  type: string
+                  format: date-time
+                  example: 1990-01-01T00:00:00Z
+                birth_place:
+                  type: object
+                  properties:
+                    latitude:
+                      type: number
+                      format: float
+                      example: 51.5074
+                    longitude:
+                      type: number
+                      format: float
+                      example: -0.1278
+                    name:
+                      type: string
+                      example: London, UK
+                chart_type:
+                  type: string
+                  enum: [birth, synastry, transit]
+                  example: birth
+              required:
+                - name
+                - birth_date
+                - birth_place
+                - chart_type
+      responses:
+        '201':
+          description: Chart created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Chart'
+        '401':
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    get:
+      summary: List charts
+      description: Get a list of user's charts
+      tags:
+        - Charts
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          schema:
+            type: integer
+            default: 1
+        - name: per_page
+          in: query
+          description: Items per page
+          required: false
+          schema:
+            type: integer
+            default: 10
+        - name: chart_type
+          in: query
+          description: Filter by chart type
+          required: false
+          schema:
+            type: string
+            enum: [birth, synastry, transit]
+        - name: sort_by
+          in: query
+          description: Sort field
+          required: false
+          schema:
+            type: string
+            default: created_at
+        - name: sort_order
+          in: query
+          description: Sort order
+          required: false
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: desc
+      responses:
+        '200':
+          description: List of charts
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                  - type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Chart'
+        '401':
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /charts/{chart_id}:
+    parameters:
+      - name: chart_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+
+    get:
+      summary: Get chart
+      description: Get information about a specific chart
+      tags:
+        - Charts
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Chart information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Chart'
+        '401':
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Chart not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    patch:
+      summary: Update chart
+      description: Update information about a specific chart
+      tags:
+        - Charts
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Updated Chart Name
+      responses:
+        '200':
+          description: Updated chart information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Chart'
+        '401':
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Chart not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      summary: Delete chart
+      description: Delete a specific chart
+      tags:
+        - Charts
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Chart deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Chart deleted successfully
+        '401':
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Chart not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /charts/{chart_id}/interpretations:
+    parameters:
+      - name: chart_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+
+    post:
+      summary: Create interpretation
+      description: Create a new interpretation for a chart
+      tags:
+        - Interpretations
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  enum: [birth_chart, synastry, transit]
+                  example: birth_chart
+                language:
+                  type: string
+                  enum: [en, ru]
+                  example: en
+                style:
+                  type: string
+                  enum: [detailed, concise]
+                  example: detailed
+              required:
+                - type
+                - language
+                - style
+      responses:
+        '201':
+          description: Interpretation created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Interpretation'
+        '401':
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Chart not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    get:
+      summary: List interpretations
+      description: Get a list of interpretations for a chart
+      tags:
+        - Interpretations
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          schema:
+            type: integer
+            default: 1
+        - name: per_page
+          in: query
+          description: Items per page
+          required: false
+          schema:
+            type: integer
+            default: 10
+        - name: type
+          in: query
+          description: Filter by interpretation type
+          required: false
+          schema:
+            type: string
+            enum: [birth_chart, synastry, transit]
+        - name: status
+          in: query
+          description: Filter by status
+          required: false
+          schema:
+            type: string
+            enum: [processing, completed, failed]
+        - name: sort_by
+          in: query
+          description: Sort field
+          required: false
+          schema:
+            type: string
+            default: created_at
+        - name: sort_order
+          in: query
+          description: Sort order
+          required: false
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: desc
+      responses:
+        '200':
+          description: List of interpretations
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                  - type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Interpretation'
+        '401':
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Chart not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /interpretations/{interpretation_id}:
+    parameters:
+      - name: interpretation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+
+    get:
+      summary: Get interpretation
+      description: Get information about a specific interpretation
+      tags:
+        - Interpretations
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Interpretation information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Interpretation'
+        '401':
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Interpretation not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+security:
+  - BearerAuth: [] 

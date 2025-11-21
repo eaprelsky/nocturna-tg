@@ -34,7 +34,7 @@ def test_natal_chart():
         "planets": {
             "sun": {"lon": 85.83, "lat": 0.0},
             "moon": {"lon": 133.21, "lat": 5.12},
-            "mercury": {"lon": 95.45, "lat": -2.3},
+            "mercury": {"lon": 95.45, "lat": -2.3, "retrograde": True},
             "venus": {"lon": 110.20, "lat": 1.5},
             "mars": {"lon": 45.30, "lat": -0.8},
             "jupiter": {"lon": 200.15, "lat": 0.5},
@@ -127,7 +127,7 @@ def test_transit_chart():
             "planets": {
                 "sun": {"lon": 290.15, "lat": 0.0},
                 "moon": {"lon": 45.67, "lat": 4.8},
-                "mercury": {"lon": 275.30, "lat": -1.5},
+                "mercury": {"lon": 275.30, "lat": -1.5, "retrograde": True},
                 "venus": {"lon": 310.45, "lat": 2.1},
                 "mars": {"lon": 180.20, "lat": -1.2},
                 "jupiter": {"lon": 65.80, "lat": 0.8},

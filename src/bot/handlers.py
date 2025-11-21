@@ -93,53 +93,49 @@ class BotHandlers:
         logger.info(f"User {user.id} started the bot")
 
         welcome_message = (
-            f"Привет, {user.mention_markdown_v2()}\\!\n\n"
-            "🌟 Я *Nocturna Bot* — твой астрологический помощник\\.\n\n"
-            "*Мои возможности:*\n"
+            f"Привет, {user.mention_html()}\!\n\n" # Use mention_html
+            "🌟 Я <b>Nocturna Bot</b> — твой астрологический помощник.\n\n" # Use HTML bold tag
+            "<b>Мои возможности:</b>\n" # Use HTML bold tag
             "• Текущие позиции планет\n"
             "• Анализ аспектов между планетами\n"
             "• Транзиты в реальном времени\n"
             "• Визуализация карт\n\n"
-            "*Доступные команды:*\n"
-            "/transit \\- Изображение текущей карты транзитов\n"
-            "/transit_planets \\- Список текущих позиций планет\n"
-            "/transit_aspects \\- Список текущих аспектов\n"
-            "/help \\- Справка по командам\n\n"
-            "Нажми /transit, чтобы начать\\!"
+            "<b>Доступные команды:</b>\n" # Use HTML bold tag
+            "/transit \- Изображение текущей карты транзитов\n"
+            "/transit_planets \- Список текущих позиций планет\n"
+            "/transit_aspects \- Список текущих аспектов\n"
+            "/help \- Справка по командам\n\n"
+            "Нажми /transit, чтобы начать!"
         )
 
         await update.message.reply_text(
-            welcome_message, parse_mode=ParseMode.MARKDOWN_V2
+            welcome_message, parse_mode=ParseMode.HTML # Change to HTML
         )
 
     async def help_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         """
         Handle /help command.
-
-        Args:
-            update: Telegram update object
-            context: Telegram context object
         """
         logger.info(f"User {update.effective_user.id} requested help")
 
         help_message = (
-            "📚 *Справка по командам*\n\n"
-            "*Основные команды:*\n"
-            "/transit \\- Изображение текущей карты транзитов\n"
-            "/transit_planets \\- Текстовый список текущих позиций планет\n"
-            "/transit_aspects \\- Текстовый список текущих аспектов\n"
-            "/help \\- Показать эту справку\n\n"
-            "*О боте:*\n"
+            "📚 <b>Справка по командам</b>\n\n" # Use HTML bold tag
+            "<b>Основные команды:</b>\n" # Use HTML bold tag
+            "/transit \- Изображение текущей карты транзитов\n"
+            "/transit_planets \- Текстовый список текущих позиций планет\n"
+            "/transit_aspects \- Текстовый список текущих аспектов\n"
+            "/help \- Показать эту справку\n\n"
+            "<b>О боте:</b>\n" # Use HTML bold tag
             "Бот использует сервер расчетов Nocturna для получения точных "
-            "астрологических данных\\. Все расчеты выполняются в реальном времени\\.\n\n"
-            "*Технические детали:*\n"
-            "• Координаты: Москва \\(55\\.7558°N, 37\\.6173°E\\)\n"
+            "астрологических данных. Все расчеты выполняются в реальном времени.\n\n"
+            "<b>Технические детали:</b>\n" # Use HTML bold tag
+            "• Координаты: Москва (55.7558°N, 37.6173°E)\n"
             "• Часовой пояс: Europe/Moscow\n"
             "• Система домов: Placidus\n"
         )
 
         await update.message.reply_text(
-            help_message, parse_mode=ParseMode.MARKDOWN_V2
+            help_message, parse_mode=ParseMode.HTML # Change to HTML
         )
 
     async def transit_command(
@@ -147,10 +143,6 @@ class BotHandlers:
     ) -> None:
         """
         Handle /transit command - generate chart image or fallback to text report.
-
-        Args:
-            update: Telegram update object
-            context: Telegram context object
         """
         user_id = update.effective_user.id
         logger.info(f"User {user_id} requested transit chart")
@@ -166,31 +158,37 @@ class BotHandlers:
                 try:
                     image_bytes = self.chart_service.generate_current_transit_chart()
 
-                    # Delete processing message
-                    await processing_msg.delete()
-
                     # Send image
-                    await update.message.reply_photo(
+                    sent_photo = await update.message.reply_photo(
                         photo=BytesIO(image_bytes),
-                        caption="🌟 Текущая карта транзитов\n\n"
-                        "Используйте /transit_planets для списка планет\n"
-                        "Используйте /transit_aspects для списка аспектов",
+                        caption="🌟 Текущая карта транзитов"
                     )
 
                     # Try to get and send interpretation
-                    interpretation = self.transit_service.get_interpretation()
-                    if interpretation:
-                        interpretation_text = f"📖 *Интерпретация:*\n\n{interpretation}"
-                        # Split if too long
-                        if len(interpretation_text) <= 4096:
-                            await update.message.reply_text(
-                                interpretation_text, parse_mode=ParseMode.MARKDOWN
+                    interpretation_raw = self.transit_service.get_interpretation()
+                    if interpretation_raw:
+                        interpretation_text = f"📖 <b>Интерпретация дня:</b>\n\n{interpretation_raw}"
+                        
+                        # Max caption length is 1024 characters.
+                        # If interpretation is too long, send it as a separate message.
+                        if len(interpretation_text) <= 1024 - len("🌟 Текущая карта транзитов"):
+                            combined_caption = f"🌟 Текущая карта транзитов\n\n{interpretation_text}"
+                            await sent_photo.edit_caption(
+                                caption=combined_caption,
+                                parse_mode=ParseMode.HTML
                             )
                         else:
-                            messages = self._split_message(interpretation_text, max_length=4000)
-                            for msg in messages:
-                                await update.message.reply_text(msg, parse_mode=ParseMode.MARKDOWN)
+                            # Split if too long, and send as separate message
+                            if len(interpretation_text) <= 4096:
+                                await update.message.reply_text(
+                                    interpretation_text, parse_mode=ParseMode.HTML
+                                )
+                            else:
+                                messages = self._split_message(interpretation_text, max_length=4000)
+                                for msg in messages:
+                                    await update.message.reply_text(msg, parse_mode=ParseMode.HTML)
 
+                    await processing_msg.delete() # Delete processing message only if everything is successful
                     return
                 except ChartServiceError as e:
                     logger.warning(f"Chart service error, falling back to text: {str(e)}")
@@ -204,18 +202,21 @@ class BotHandlers:
 
             # Get transit report
             report = self.transit_service.get_current_transit()
-
-            # Delete processing message
-            await processing_msg.delete()
-
+            # Try to get and send interpretation for fallback
+            interpretation_raw = self.transit_service.get_interpretation()
+            if interpretation_raw:
+                report += f"\n\n<b>Интерпретация дня:</b>\n\n{interpretation_raw}" # Use HTML bold tag
+            
             # Split long messages (Telegram limit is 4096 characters)
             if len(report) <= 4096:
-                await update.message.reply_text(report, parse_mode=ParseMode.MARKDOWN)
+                await update.message.reply_text(report, parse_mode=ParseMode.HTML)
             else:
                 # Split into multiple messages
                 messages = self._split_message(report, max_length=4000)
                 for msg in messages:
-                    await update.message.reply_text(msg, parse_mode=ParseMode.MARKDOWN)
+                    await update.message.reply_text(msg, parse_mode=ParseMode.HTML)
+                
+                await processing_msg.delete() # Delete processing message only if everything is successful
 
         except Exception as e:
             logger.error(f"Error processing transit command: {str(e)}", exc_info=True)
@@ -230,10 +231,6 @@ class BotHandlers:
     ) -> None:
         """
         Handle /transit_planets command - show planetary positions.
-
-        Args:
-            update: Telegram update object
-            context: Telegram context object
         """
         user_id = update.effective_user.id
         logger.info(f"User {user_id} requested transit planets")
@@ -247,14 +244,13 @@ class BotHandlers:
             # Get positions
             positions = self.transit_service.get_current_positions()
 
-            # Delete processing message
-            await processing_msg.delete()
-
             # Format positions
             positions_text = self.formatter.format_positions_list(positions)
 
             # Send message
-            await update.message.reply_text(positions_text, parse_mode=ParseMode.MARKDOWN)
+            await update.message.reply_text(positions_text, parse_mode=ParseMode.HTML)
+            
+            await processing_msg.delete() # Delete processing message only if everything is successful
 
         except Exception as e:
             logger.error(f"Error processing transit_planets command: {str(e)}", exc_info=True)
@@ -269,10 +265,6 @@ class BotHandlers:
     ) -> None:
         """
         Handle /transit_aspects command - show planetary aspects.
-
-        Args:
-            update: Telegram update object
-            context: Telegram context object
         """
         user_id = update.effective_user.id
         logger.info(f"User {user_id} requested transit aspects")
@@ -286,14 +278,13 @@ class BotHandlers:
             # Get aspects
             aspects = self.transit_service.get_current_aspects()
 
-            # Delete processing message
-            await processing_msg.delete()
-
             # Format aspects
             aspects_text = self.formatter.format_aspects_list(aspects)
 
             # Send message
-            await update.message.reply_text(aspects_text, parse_mode=ParseMode.MARKDOWN)
+            await update.message.reply_text(aspects_text, parse_mode=ParseMode.HTML)
+            
+            await processing_msg.delete() # Delete processing message only if everything is successful
 
         except Exception as e:
             logger.error(f"Error processing transit_aspects command: {str(e)}", exc_info=True)

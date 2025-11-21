@@ -29,9 +29,9 @@ class Settings(BaseSettings):
 
     # Chart Service Configuration
     chart_service_url: str = Field(
-        default="http://localhost:3011", alias="CHART_SERVICE_URL"
+        alias="CHART_SERVICE_URL"
     )
-    chart_service_api_key: Optional[str] = Field(None, alias="NOCTURNA_IMAGE_SERVICE_TOKEN")
+    chart_service_api_key: str = Field(alias="NOCTURNA_IMAGE_SERVICE_TOKEN")
     chart_service_timeout: int = Field(default=60, alias="CHART_SERVICE_TIMEOUT")
 
     # Application Settings

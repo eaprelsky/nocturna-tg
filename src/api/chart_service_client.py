@@ -107,6 +107,7 @@ class ChartServiceClient:
         for attempt in range(self.max_retries):
             try:
                 logger.info(f"Requesting chart render (attempt {attempt + 1}/{self.max_retries})")
+                logger.debug(f"Chart render request payload: {payload}") # Log the payload
 
                 response = self.session.post(
                     url,
