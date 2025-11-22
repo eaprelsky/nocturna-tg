@@ -38,6 +38,14 @@ class Settings(BaseSettings):
     log_level: str = Field(default="INFO", alias="LOG_LEVEL")
     timezone: str = Field(default="Europe/Moscow", alias="TIMEZONE")
 
+    # Bot Mode Configuration
+    bot_mode: str = Field(default="polling", alias="BOT_MODE")  # polling or webhook
+    webhook_url: Optional[str] = Field(None, alias="WEBHOOK_URL")
+    webhook_path: str = Field(default="/webhook", alias="WEBHOOK_PATH")
+    webhook_port: int = Field(default=8080, alias="WEBHOOK_PORT")
+    webhook_host: str = Field(default="0.0.0.0", alias="WEBHOOK_HOST")
+    webhook_secret: Optional[str] = Field(None, alias="WEBHOOK_SECRET")
+
     model_config = ConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
@@ -55,6 +63,19 @@ class Settings(BaseSettings):
 
         if self.nocturna_max_retries < 0:
             raise ValueError("NOCTURNA_MAX_RETRIES must be non-negative")
+
+        # Validate bot mode
+        if self.bot_mode not in ["polling", "webhook"]:
+            raise ValueError("BOT_MODE must be 'polling' or 'webhook'")
+
+        # Validate webhook configuration if in webhook mode
+        if self.bot_mode == "webhook":
+            if not self.webhook_url:
+                raise ValueError("WEBHOOK_URL is required in webhook mode")
+            if not self.webhook_url.startswith("https://"):
+                raise ValueError("WEBHOOK_URL must use HTTPS")
+            if self.webhook_port <= 0 or self.webhook_port > 65535:
+                raise ValueError("WEBHOOK_PORT must be between 1 and 65535")
 
 
 def get_settings() -> Settings:

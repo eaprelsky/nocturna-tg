@@ -6,6 +6,7 @@ import jwt
 from datetime import datetime
 from telegram import Update
 from telegram.ext import Application, CommandHandler
+from aiohttp import web
 
 from src.config import get_settings
 from src.api.nocturna_client import NocturnaClient
@@ -64,11 +65,115 @@ def check_token_expiry(token: str) -> None:
         logger.warning(f"Token validation error: {e}")
 
 
+async def run_polling(application: Application, settings) -> None:
+    """
+    Run bot in polling mode (for local development).
+
+    Args:
+        application: Telegram application instance
+        settings: Application settings
+    """
+    logger.info("Starting bot in POLLING mode...")
+    logger.info(f"Bot username: {settings.telegram_bot_username or 'Not set'}")
+    logger.info("Bot is running. Press Ctrl+C to stop.")
+
+    await application.initialize()
+    await application.start()
+    await application.updater.start_polling(allowed_updates=Update.ALL_TYPES)
+
+    # Keep the bot running
+    try:
+        import asyncio
+        await asyncio.Event().wait()
+    except (KeyboardInterrupt, SystemExit):
+        logger.info("Stopping bot...")
+    finally:
+        await application.updater.stop()
+        await application.stop()
+        await application.shutdown()
+
+
+async def run_webhook(application: Application, settings, handlers: BotHandlers) -> None:
+    """
+    Run bot in webhook mode (for production).
+
+    Args:
+        application: Telegram application instance
+        settings: Application settings
+        handlers: Bot handlers instance
+    """
+    logger.info("Starting bot in WEBHOOK mode...")
+    logger.info(f"Webhook URL: {settings.webhook_url}{settings.webhook_path}")
+    logger.info(f"Listening on {settings.webhook_host}:{settings.webhook_port}")
+    logger.info(f"Bot username: {settings.telegram_bot_username or 'Not set'}")
+
+    # Create aiohttp application for webhook
+    aiohttp_app = web.Application()
+    
+    # Add health check endpoint
+    aiohttp_app.router.add_get("/health", handlers.health_check)
+    
+    # Initialize and start bot
+    await application.initialize()
+    await application.start()
+    
+    # Set webhook
+    webhook_url = f"{settings.webhook_url}{settings.webhook_path}"
+    await application.bot.set_webhook(
+        url=webhook_url,
+        allowed_updates=Update.ALL_TYPES,
+        secret_token=settings.webhook_secret,
+    )
+    
+    # Configure webhook handler
+    async def telegram_webhook(request: web.Request) -> web.Response:
+        """Handle incoming webhook requests from Telegram."""
+        try:
+            # Verify secret token if configured
+            if settings.webhook_secret:
+                token = request.headers.get("X-Telegram-Bot-Api-Secret-Token")
+                if token != settings.webhook_secret:
+                    logger.warning("Invalid webhook secret token")
+                    return web.Response(status=403)
+            
+            # Process update
+            update_data = await request.json()
+            update = Update.de_json(update_data, application.bot)
+            await application.process_update(update)
+            
+            return web.Response(status=200)
+        except Exception as e:
+            logger.error(f"Error processing webhook: {str(e)}")
+            return web.Response(status=500)
+    
+    # Add webhook endpoint
+    aiohttp_app.router.add_post(settings.webhook_path, telegram_webhook)
+    
+    # Run aiohttp server
+    runner = web.AppRunner(aiohttp_app)
+    await runner.setup()
+    site = web.TCPSite(runner, settings.webhook_host, settings.webhook_port)
+    
+    try:
+        await site.start()
+        logger.info("Webhook server started successfully")
+        
+        # Keep the server running
+        import asyncio
+        await asyncio.Event().wait()
+    except (KeyboardInterrupt, SystemExit):
+        logger.info("Stopping webhook server...")
+    finally:
+        await application.stop()
+        await application.shutdown()
+        await runner.cleanup()
+
+
 def main() -> None:
     """
     Main function to run the bot.
 
-    Initializes all components and starts the bot polling.
+    Initializes all components and starts the bot in polling or webhook mode.
     """
     try:
         # Load configuration
@@ -150,12 +255,12 @@ def main() -> None:
         # Register error handler
         application.add_error_handler(handlers.error_handler)
 
-        # Start the bot
-        logger.info("Starting bot polling...")
-        logger.info(f"Bot username: {settings.telegram_bot_username or 'Not set'}")
-        logger.info("Bot is running. Press Ctrl+C to stop.")
-
-        application.run_polling(allowed_updates=Update.ALL_TYPES)
+        # Start the bot in the appropriate mode
+        import asyncio
+        if settings.bot_mode == "webhook":
+            asyncio.run(run_webhook(application, settings, handlers))
+        else:
+            asyncio.run(run_polling(application, settings))
 
     except Exception as e:
         logger.error(f"Fatal error: {str(e)}")

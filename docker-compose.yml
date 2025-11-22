@@ -17,11 +17,19 @@ services:
       
       # Chart Service Configuration (optional)
       - CHART_SERVICE_URL=${CHART_SERVICE_URL:-}
-      - CHART_SERVICE_API_KEY=${CHART_SERVICE_API_KEY:-}
+      - NOCTURNA_IMAGE_SERVICE_TOKEN=${NOCTURNA_IMAGE_SERVICE_TOKEN:-}
       
       # OpenRouter LLM Configuration (optional)
       - OPENROUTER_API_KEY=${OPENROUTER_API_KEY:-}
       - OPENROUTER_MODEL=${OPENROUTER_MODEL:-anthropic/claude-haiku-4.5}
+      
+      # Bot Mode Configuration
+      - BOT_MODE=${BOT_MODE:-polling}
+      - WEBHOOK_URL=${WEBHOOK_URL:-}
+      - WEBHOOK_PATH=${WEBHOOK_PATH:-/webhook}
+      - WEBHOOK_PORT=${WEBHOOK_PORT:-8080}
+      - WEBHOOK_HOST=${WEBHOOK_HOST:-0.0.0.0}
+      - WEBHOOK_SECRET=${WEBHOOK_SECRET:-}
       
       # Logging
       - LOG_LEVEL=${LOG_LEVEL:-INFO}
@@ -30,7 +38,12 @@ services:
       - ./logs:/app/logs
     
     # Use host network to access services running on the same host
+    # Comment out network_mode and uncomment ports when using webhook mode
     network_mode: host
+    
+    # Uncomment when using webhook mode (and comment out network_mode: host)
+    # ports:
+    #   - "${WEBHOOK_PORT:-8080}:8080"
     
     deploy:
       resources:

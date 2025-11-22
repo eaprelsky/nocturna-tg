@@ -64,6 +64,7 @@ make run
 - [📦 Установка и настройка](docs/installation.md)
 - [⚡ Быстрый старт](docs/quickstart.md)
 - [🚀 Развертывание в production](docs/deployment.md)
+- [🔗 Настройка Webhook режима](docs/webhook-setup.md)
 
 ### Интеграции
 - [🤖 Интеграция с LLM (OpenRouter)](docs/llm-integration.md)
@@ -137,6 +138,15 @@ make clean     # Удалить временные файлы
 TELEGRAM_BOT_TOKEN=your_bot_token
 TELEGRAM_BOT_USERNAME=your_bot_name
 
+# Bot Mode (polling для локальной разработки, webhook для production)
+BOT_MODE=polling
+
+# Webhook Configuration (только для production)
+# WEBHOOK_URL=https://tg.nocturna.ru
+# WEBHOOK_PATH=/webhook
+# WEBHOOK_PORT=8080
+# WEBHOOK_SECRET=your_random_secret
+
 # Nocturna Calculations API
 NOCTURNA_API_URL=http://localhost:8000/api
 NOCTURNA_SERVICE_TOKEN=your_service_token
@@ -149,7 +159,11 @@ OPENROUTER_MODEL=anthropic/claude-haiku-4.5
 LOG_LEVEL=INFO
 ```
 
-См. [.env.example](.env.example) для полного списка.
+**Режимы работы:**
+- **Polling** (по умолчанию) - для локальной разработки, не требует внешнего доступа
+- **Webhook** - для production, требует HTTPS и публичный домен
+
+См. [Webhook Setup Guide](docs/webhook-setup.md) для настройки production режима.
 
 ## 🐳 Docker
 

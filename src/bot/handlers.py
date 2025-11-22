@@ -5,12 +5,13 @@ from io import BytesIO
 from telegram import Update
 from telegram.ext import ContextTypes
 from telegram.constants import ParseMode
+from aiohttp import web
+from typing import Optional
 
 from src.services.transit_service import TransitService
 from src.services.chart_service import ChartService
 from src.api.chart_service_client import ChartServiceError
 from src.formatters.russian_formatter import RussianFormatter
-from typing import Optional
 
 
 logger = logging.getLogger(__name__)
@@ -311,4 +312,20 @@ class BotHandlers:
                 "❌ Произошла ошибка при обработке команды.\n"
                 "Пожалуйста, попробуйте позже."
             )
+
+    @staticmethod
+    async def health_check(request: web.Request) -> web.Response:
+        """
+        Health check endpoint for monitoring.
+
+        Args:
+            request: aiohttp request object
+
+        Returns:
+            JSON response with health status
+        """
+        return web.json_response({
+            "status": "healthy",
+            "service": "nocturna-telegram-bot"
+        })
 
