@@ -1,5 +1,6 @@
 """Main entry point for Nocturna Telegram Bot."""
 
+import asyncio
 import logging
 import sys
 import jwt
@@ -136,11 +137,15 @@ async def run_webhook(application: Application, settings, handlers: BotHandlers)
                     logger.warning("Invalid webhook secret token")
                     return web.Response(status=403)
             
-            # Process update
+            # Process update asynchronously without waiting
+            # This prevents 504 Gateway Timeout when processing takes long
             update_data = await request.json()
             update = Update.de_json(update_data, application.bot)
-            await application.process_update(update)
             
+            # Process update in background task
+            asyncio.create_task(application.process_update(update))
+            
+            # Immediately return 200 OK to Telegram
             return web.Response(status=200)
         except Exception as e:
             logger.error(f"Error processing webhook: {str(e)}")
