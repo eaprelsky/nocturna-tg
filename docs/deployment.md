@@ -63,10 +63,23 @@ nano .env  # или vim, code и т.д.
 ```env
 TELEGRAM_BOT_TOKEN=1234567890:ABCdefGHIjklMNOpqrsTUVwxyz
 TELEGRAM_BOT_USERNAME=your_bot_name
-NOCTURNA_API_URL=http://your-nocturna-server:8000/api
+
+# Если Nocturna API на том же сервере - используйте localhost
+NOCTURNA_API_URL=http://localhost:8000/api
+# Если на другом сервере - используйте его адрес
+# NOCTURNA_API_URL=http://your-nocturna-server:8000/api
+
 NOCTURNA_SERVICE_TOKEN=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+# Опциональные переменные (оставьте пустыми если не используете)
+CHART_SERVICE_URL=
+CHART_SERVICE_API_KEY=
+OPENROUTER_API_KEY=
+
 LOG_LEVEL=INFO
 ```
+
+> **Важно:** Docker Compose использует `network_mode: host`, поэтому бот может обращаться к сервисам на `localhost` напрямую.
 
 ### Шаг 3: Запуск через Docker Compose
 

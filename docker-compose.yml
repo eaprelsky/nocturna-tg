@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   nocturna-bot:
     build:
@@ -14,15 +12,15 @@ services:
       - TELEGRAM_BOT_USERNAME=${TELEGRAM_BOT_USERNAME}
       
       # API Configuration
-      - NOCTURNA_API_URL=${NOCTURNA_API_URL:-http://nocturna-calculations:8000/api}
+      - NOCTURNA_API_URL=${NOCTURNA_API_URL}
       - NOCTURNA_SERVICE_TOKEN=${NOCTURNA_SERVICE_TOKEN}
       
       # Chart Service Configuration (optional)
-      - CHART_SERVICE_URL=${CHART_SERVICE_URL:-http://chart-service:3000}
-      - CHART_SERVICE_API_KEY=${CHART_SERVICE_API_KEY}
+      - CHART_SERVICE_URL=${CHART_SERVICE_URL:-}
+      - CHART_SERVICE_API_KEY=${CHART_SERVICE_API_KEY:-}
       
       # OpenRouter LLM Configuration (optional)
-      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY:-}
       - OPENROUTER_MODEL=${OPENROUTER_MODEL:-anthropic/claude-haiku-4.5}
       
       # Logging
@@ -31,11 +29,8 @@ services:
     volumes:
       - ./logs:/app/logs
     
-    networks:
-      - nocturna-network
-    
-    depends_on:
-      - nocturna-calculations
+    # Use host network to access services running on the same host
+    network_mode: host
     
     deploy:
       resources:
@@ -45,33 +40,6 @@ services:
         reservations:
           memory: 256M
           cpus: '0.25'
-  
-  # Nocturna Calculations Service (external)
-  # This should be running separately or configured as external service
-  nocturna-calculations:
-    image: nocturna/calculations:latest
-    container_name: nocturna-calculations
-    restart: unless-stopped
-    
-    environment:
-      - PORT=8000
-      - LOG_LEVEL=${LOG_LEVEL:-INFO}
-    
-    ports:
-      - "8000:8000"
-    
-    networks:
-      - nocturna-network
-    
-    deploy:
-      resources:
-        limits:
-          memory: 1G
-          cpus: '1.0'
-
-networks:
-  nocturna-network:
-    driver: bridge
 
 volumes:
   logs:
