@@ -38,6 +38,13 @@ class Settings(BaseSettings):
     log_level: str = Field(default="INFO", alias="LOG_LEVEL")
     timezone: str = Field(default="Europe/Moscow", alias="TIMEZONE")
 
+    # Database Configuration
+    database_url: str = Field(
+        default="postgresql+asyncpg://nocturna_bot:nocturna_bot@localhost:5432/nocturna_bot",
+        alias="DATABASE_URL"
+    )
+    database_echo: bool = Field(default=False, alias="DATABASE_ECHO")
+
     # Bot Mode Configuration
     bot_mode: str = Field(default="polling", alias="BOT_MODE")  # polling or webhook
     webhook_url: Optional[str] = Field(None, alias="WEBHOOK_URL")
@@ -63,6 +70,12 @@ class Settings(BaseSettings):
 
         if self.nocturna_max_retries < 0:
             raise ValueError("NOCTURNA_MAX_RETRIES must be non-negative")
+
+        # Validate database URL
+        if not self.database_url:
+            raise ValueError("DATABASE_URL is required")
+        if not self.database_url.startswith(("postgresql://", "postgresql+asyncpg://")):
+            raise ValueError("DATABASE_URL must be a PostgreSQL connection string")
 
         # Validate bot mode
         if self.bot_mode not in ["polling", "webhook"]:

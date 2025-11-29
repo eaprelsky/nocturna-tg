@@ -5,63 +5,94 @@ All notable changes to Nocturna Telegram Bot will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2025-11-24
+
+### Added - Personal Transits Feature
+- 🌟 **Biwheel Transit Charts** - Personal transit visualization
+  - Inner wheel: User's natal chart
+  - Outer wheel: Current transit positions
+  - Aspect lines showing natal-to-transit interactions
+- 🔮 **`/my_transit` command** - Personal transit analysis
+  - Calculates transits to user's natal chart
+  - Shows aspects between natal and current planetary positions
+  - LLM-powered personalized interpretation
+- 📊 **Database Integration** - Persistent user data storage
+  - SQLAlchemy ORM with Alembic migrations
+  - Stores natal chart data per user
+  - `/natal` command to save birth data
+  - `/my_natal` command to view saved chart
+- 🎨 **Chart Service Integration** - Visual chart rendering
+  - Integration with nocturna-image service
+  - Biwheel chart rendering endpoint
+  - Aspect configuration (natal-to-transit only)
+  - Graceful fallback to text-only mode
+
+### Changed
+- ⚡ **Enhanced Chart Service Client** (`src/api/chart_service_client.py`)
+  - Added `render_transit_chart()` method for biwheel charts
+  - Added `render_natal_chart()` method for single charts
+- 📈 **Enhanced Services**
+  - `ChartService`: Added `generate_personal_transit_chart()` method
+  - `InterpretationService`: Added `interpret_personal_transits()` method
+  - `PersonalTransitService`: Returns natal houses for biwheel rendering
+- 🔧 **API Client Fixes**
+  - Fixed synastry endpoint parameter (`target_chart_id` not `second_chart_id`)
+  - Improved error handling and logging
+  - Re-enabled personal transits after API fix
+
+### Fixed
+- 🐛 **Synastry Endpoint** - nocturna-calculations API fully implemented
+  - `calculate_synastry_chart()` method now available
+  - Fixed parameter name mismatch in documentation
+  - Personal transits feature re-enabled
+- 🔍 **Birth Data Validation** - Fixed incorrect chart_id check
+  - Removed check for `chart_id` field (always None with caching)
+  - Proper validation of birth data presence
+
+### Infrastructure
+- 🗄️ **Database Setup**
+  - Alembic migration system
+  - Initial tables: users, birth_data
+  - Automatic schema migrations
+- 📦 **New Dependencies**
+  - `sqlalchemy` - ORM
+  - `alembic` - Database migrations
+  - `asyncpg` - Async PostgreSQL support (optional)
+
+### Documentation
+- 📘 Created comprehensive feature documentation:
+  - `docs/features/biwheel-transit-charts.md` - Biwheel implementation guide
+  - `docs/features/biwheel-transit-implementation.md` - Quick reference
+- 📝 Updated API integration docs
+- 🔗 Added Chart Service API references
+
 ## [1.0.1] - 2025-11-22
 
 ### Added
 - 🔗 **Webhook mode support** - Production-ready webhook implementation
 - 🏥 Health check endpoint (`/health`) for monitoring
-- 📚 Comprehensive webhook documentation:
-  - Webhook setup guide with step-by-step instructions
-  - Nginx configuration examples
-  - SSL/Certbot integration guide
-  - Quick commands cheatsheet
-  - Deployment checklist
-  - Troubleshooting guide
+- 📚 Comprehensive webhook documentation
 
 ### Changed
 - ⚡ **CRITICAL FIX**: Webhook timeout issue resolved
   - Webhook handler now uses asynchronous processing
   - Immediately returns 200 OK to Telegram
   - Commands processed in background without blocking
-  - Prevents 504 Gateway Timeout errors
-  - Eliminates message duplication loop
 - 🔧 Increased Nginx proxy timeouts (10s → 60s) as safety measure
 - 📦 Added `aiohttp` dependency for webhook HTTP server
 
 ### Configuration
 - 🎛️ New environment variables for webhook mode:
   - `BOT_MODE` - polling (default) or webhook
-  - `WEBHOOK_URL` - public HTTPS URL for webhook
-  - `WEBHOOK_PATH` - webhook endpoint path
-  - `WEBHOOK_PORT` - internal port for webhook server
-  - `WEBHOOK_HOST` - host binding for webhook server
-  - `WEBHOOK_SECRET` - secret token for webhook verification
-
-### Infrastructure
-- 🐳 Updated Docker Compose with port mapping for webhook
-- 🌐 Nginx configuration template for production deployment
-- 🔒 SSL/HTTPS support via Let's Encrypt integration
-- 📊 Health check endpoint for uptime monitoring
+  - `WEBHOOK_URL`, `WEBHOOK_PATH`, `WEBHOOK_PORT`, `WEBHOOK_HOST`, `WEBHOOK_SECRET`
 
 ### Documentation
 - 📘 `docs/webhook-setup.md` - Detailed webhook setup guide
-- 📋 `WEBHOOK_SETUP_QUICK.md` - Quick start (8 steps)
-- ✅ `DEPLOYMENT_CHECKLIST.md` - Complete deployment checklist
-- 🔧 `QUICK_COMMANDS.md` - Command reference cheatsheet
-- 🐛 `WEBHOOK_TIMEOUT_FIX.md` - Timeout issue explanation and fix
 - 🌐 `nginx-tg.nocturna.ru.conf` - Ready-to-use Nginx config
 
 ### Fixed
 - 🐛 **Webhook 504 Gateway Timeout** causing infinite message loops
 - 🔄 Proper async handling of long-running operations
-- 🚀 Instant webhook response to Telegram API
-
-### Technical Details
-- Webhook handler uses `asyncio.create_task()` for non-blocking processing
-- Telegram receives 200 OK immediately (< 1ms)
-- Command processing continues in background
-- Supports both polling (development) and webhook (production) modes
-- Seamless mode switching via configuration
 
 ## [1.0.0] - 2025-11-21
 

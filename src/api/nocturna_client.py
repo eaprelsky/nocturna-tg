@@ -58,6 +58,21 @@ class NocturnaClient:
         
         self.session.headers.update(headers)
 
+    def _handle_error_response(self, error: Any) -> str:
+        """
+        Handle error response that can be dict or string.
+        
+        Args:
+            error: Error data (dict or string)
+            
+        Returns:
+            Error message string
+        """
+        if isinstance(error, dict):
+            return error.get('message', 'Unknown error')
+        else:
+            return str(error) if error else 'Unknown error'
+    
     def _make_request(
         self, method: str, endpoint: str, **kwargs
     ) -> Dict[str, Any]:
@@ -101,6 +116,26 @@ class NocturnaClient:
                     continue
                 raise NocturnaAPIError("Request timeout after retries")
 
+            except requests.exceptions.HTTPError as e:
+                # For client errors (4xx), don't retry - log the response body
+                if 400 <= e.response.status_code < 500:
+                    error_body = ""
+                    try:
+                        error_data = e.response.json()
+                        error_body = f"\nAPI Response: {error_data}"
+                    except Exception:
+                        error_body = f"\nResponse Text: {e.response.text}"
+                    
+                    logger.error(f"Client error {e.response.status_code}: {str(e)}{error_body}")
+                    raise NocturnaAPIError(f"Request failed: {str(e)}{error_body}")
+                
+                # For server errors (5xx), retry
+                if attempt < self.max_retries:
+                    logger.warning(f"Server error, retrying (attempt {attempt + 1})")
+                    time.sleep(2**attempt)
+                    continue
+                raise NocturnaAPIError(f"Request failed: {str(e)}")
+            
             except requests.exceptions.RequestException as e:
                 if attempt < self.max_retries:
                     logger.warning(f"Request error, retrying (attempt {attempt + 1})")
@@ -169,7 +204,7 @@ class NocturnaClient:
                 return response.get("data", {})
             else:
                 error = response.get("error", {})
-                raise NocturnaAPIError(f"API error: {error.get('message', 'Unknown error')}")
+                raise NocturnaAPIError(f"API error: {self._handle_error_response(error)}")
         else:
             # Direct format - return as is
             return response
@@ -238,7 +273,7 @@ class NocturnaClient:
                 return response.get("data", {})
             else:
                 error = response.get("error", {})
-                raise NocturnaAPIError(f"API error: {error.get('message', 'Unknown error')}")
+                raise NocturnaAPIError(f"API error: {self._handle_error_response(error)}")
         else:
             # Direct format - return as is
             return response
@@ -287,8 +322,282 @@ class NocturnaClient:
                 return response.get("data", {})
             else:
                 error = response.get("error", {})
-                raise NocturnaAPIError(f"API error: {error.get('message', 'Unknown error')}")
+                raise NocturnaAPIError(f"API error: {self._handle_error_response(error)}")
         else:
             # Direct format - return as is
+            return response
+
+    def create_chart(
+        self,
+        date: str,
+        time: str,
+        latitude: float,
+        longitude: float,
+        timezone: str,
+        config: Optional[Dict[str, Any]] = None,
+    ) -> Dict[str, Any]:
+        """
+        Create a chart in Nocturna API.
+        
+        Args:
+            date: Date in YYYY-MM-DD format
+            time: Time in HH:MM:SS format
+            latitude: Geographic latitude in degrees
+            longitude: Geographic longitude in degrees
+            timezone: Timezone string (e.g., "Europe/Moscow")
+            config: Optional chart configuration (house system, aspects, orbs)
+            
+        Returns:
+            Dictionary with chart data including chart_id
+        """
+        # Combine date and time into ISO datetime format
+        # API expects: "1990-01-01T12:00:00" format
+        datetime_str = f"{date}T{time}"
+        
+        # Provide default config if not specified (required by API)
+        if config is None:
+            config = {
+                "house_system": "placidus",
+                "aspects": ["conjunction", "opposition", "trine", "square", "sextile"],
+                "orbs": {
+                    "conjunction": 8,
+                    "opposition": 8,
+                    "trine": 6,
+                    "square": 6,
+                    "sextile": 4
+                }
+            }
+        
+        payload = {
+            "date": datetime_str,
+            "latitude": latitude,
+            "longitude": longitude,
+            "timezone": timezone,
+            "config": config,
+        }
+        
+        logger.debug(f"Creating chart with payload: {payload}")
+        response = self._make_request("POST", "/charts", json=payload)
+        
+        # Handle wrapped or direct response
+        if "success" in response:
+            if response.get("success"):
+                return response.get("data", {})
+            else:
+                error = response.get("error", {})
+                raise NocturnaAPIError(f"API error: {self._handle_error_response(error)}")
+        else:
+            # Direct format - return as is
+            return response
+    
+    def get_chart(self, chart_id: str) -> Dict[str, Any]:
+        """
+        Get chart by ID.
+        
+        Args:
+            chart_id: Chart ID
+            
+        Returns:
+            Dictionary with chart data
+        """
+        response = self._make_request("GET", f"/charts/{chart_id}")
+        
+        if "success" in response:
+            if response.get("success"):
+                return response.get("data", {})
+            else:
+                error = response.get("error", {})
+                raise NocturnaAPIError(f"API error: {self._handle_error_response(error)}")
+        else:
+            return response
+    
+    def calculate_synastry(
+        self,
+        chart_id: str,
+        target_chart_id: str,
+        aspects: Optional[List[str]] = None,
+        orb_multiplier: float = 1.0,
+    ) -> Dict[str, Any]:
+        """
+        Calculate synastry between two charts.
+        
+        Args:
+            chart_id: First chart ID (e.g., natal chart)
+            target_chart_id: Second chart ID (e.g., transit/comparison chart)
+            aspects: Optional list of aspect types
+            orb_multiplier: Orb multiplier for aspects
+            
+        Returns:
+            Dictionary with synastry aspects
+        """
+        payload = {
+            "target_chart_id": target_chart_id,  # API actually uses 'target_chart_id' (not 'second_chart_id' as in docs)
+            "orb_multiplier": orb_multiplier,
+        }
+        
+        if aspects:
+            payload["aspects"] = aspects
+        
+        response = self._make_request(
+            "POST", f"/charts/{chart_id}/synastry", json=payload
+        )
+        
+        if "success" in response:
+            if response.get("success"):
+                return response.get("data", {})
+            else:
+                error = response.get("error", {})
+                raise NocturnaAPIError(f"API error: {self._handle_error_response(error)}")
+        else:
+            return response
+    
+    def delete_chart(self, chart_id: str) -> bool:
+        """
+        Delete chart by ID.
+        
+        Args:
+            chart_id: Chart ID
+            
+        Returns:
+            True if successful
+        """
+        try:
+            self._make_request("DELETE", f"/charts/{chart_id}")
+            return True
+        except NocturnaAPIError:
+            return False
+    
+    def calculate_planetary_positions(
+        self,
+        date: str,
+        time: str,
+        latitude: float,
+        longitude: float,
+        timezone: str,
+        planets: Optional[List[str]] = None,
+        house_system: str = "placidus",
+    ) -> Dict[str, Any]:
+        """
+        Calculate planetary positions directly without creating a chart.
+        
+        Args:
+            date: Date in YYYY-MM-DD format
+            time: Time in HH:MM:SS format
+            latitude: Geographic latitude
+            longitude: Geographic longitude
+            timezone: Timezone string
+            planets: Optional list of planets to calculate
+            house_system: House system to use
+            
+        Returns:
+            Dictionary with planetary positions
+        """
+        payload = {
+            "date": date,
+            "time": time,
+            "latitude": latitude,
+            "longitude": longitude,
+            "timezone": timezone,
+            "house_system": house_system,
+        }
+        
+        if planets:
+            payload["planets"] = planets
+        
+        response = self._make_request("POST", "/calculations/planetary-positions", json=payload)
+        
+        if "success" in response:
+            if response.get("success"):
+                return response.get("data", {})
+            else:
+                error = response.get("error", {})
+                raise NocturnaAPIError(f"API error: {self._handle_error_response(error)}")
+        else:
+            return response
+    
+    def calculate_houses_direct(
+        self,
+        date: str,
+        time: str,
+        latitude: float,
+        longitude: float,
+        timezone: str,
+        house_system: str = "placidus",
+    ) -> Dict[str, Any]:
+        """
+        Calculate houses directly without creating a chart.
+        
+        Args:
+            date: Date in YYYY-MM-DD format
+            time: Time in HH:MM:SS format
+            latitude: Geographic latitude
+            longitude: Geographic longitude
+            timezone: Timezone string
+            house_system: House system to use
+            
+        Returns:
+            Dictionary with houses data
+        """
+        payload = {
+            "date": date,
+            "time": time,
+            "latitude": latitude,
+            "longitude": longitude,
+            "timezone": timezone,
+            "house_system": house_system,
+        }
+        
+        response = self._make_request("POST", "/calculations/houses", json=payload)
+        
+        if "success" in response:
+            if response.get("success"):
+                return response.get("data", {})
+            else:
+                error = response.get("error", {})
+                raise NocturnaAPIError(f"API error: {self._handle_error_response(error)}")
+        else:
+            return response
+    
+    def calculate_aspects_direct(
+        self,
+        date: str,
+        time: str,
+        latitude: float,
+        longitude: float,
+        timezone: str,
+        house_system: str = "placidus",
+    ) -> Dict[str, Any]:
+        """
+        Calculate aspects directly without creating a chart.
+        
+        Args:
+            date: Date in YYYY-MM-DD format
+            time: Time in HH:MM:SS format
+            latitude: Geographic latitude
+            longitude: Geographic longitude
+            timezone: Timezone string
+            house_system: House system to use
+            
+        Returns:
+            Dictionary with aspects data
+        """
+        payload = {
+            "date": date,
+            "time": time,
+            "latitude": latitude,
+            "longitude": longitude,
+            "timezone": timezone,
+            "house_system": house_system,
+        }
+        
+        response = self._make_request("POST", "/calculations/aspects", json=payload)
+        
+        if "success" in response:
+            if response.get("success"):
+                return response.get("data", {})
+            else:
+                error = response.get("error", {})
+                raise NocturnaAPIError(f"API error: {self._handle_error_response(error)}")
+        else:
             return response
 

@@ -1,0 +1,276 @@
+Starting Nocturna Telegram Bot...
+python -m src.main
+2025-11-23 11:57:00,045 - __main__ - INFO - Loading configuration...
+2025-11-23 11:57:00,052 - __main__ - WARNING - Could not determine token expiration
+2025-11-23 11:57:00,053 - __main__ - INFO - Initializing Nocturna API client: https://calculations.nocturna.ru/api
+2025-11-23 11:57:00,053 - __main__ - INFO - Initializing OpenRouter client: anthropic/claude-haiku-4.5
+2025-11-23 11:57:00,107 - __main__ - INFO - Initializing Chart Service client: http://localhost:3011
+2025-11-23 11:57:00,107 - __main__ - DEBUG - Chart Service API key length: 64
+2025-11-23 11:57:00,107 - __main__ - INFO - Initializing services...
+2025-11-23 11:57:00,108 - __main__ - INFO - Initializing bot handlers...
+2025-11-23 11:57:00,108 - __main__ - INFO - Creating Telegram application...
+2025-11-23 11:57:00,129 - asyncio - DEBUG - Using selector: EpollSelector
+2025-11-23 11:57:00,130 - __main__ - INFO - Starting bot in POLLING mode...
+2025-11-23 11:57:00,130 - __main__ - INFO - Bot username: nocturna_dev_bot
+2025-11-23 11:57:00,130 - __main__ - INFO - Bot is running. Press Ctrl+C to stop.
+2025-11-23 11:57:00,131 - telegram.ext.ExtBot - DEBUG - Entering: get_me
+2025-11-23 11:57:00,139 - httpcore.connection - DEBUG - connect_tcp.started host='api.telegram.org' port=443 local_address=None timeout=5.0 socket_options=None
+2025-11-23 11:57:00,199 - httpcore.connection - DEBUG - connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x724fd7005fd0>
+2025-11-23 11:57:00,199 - httpcore.connection - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x724fd6f32cc0> server_hostname='api.telegram.org' timeout=5.0
+2025-11-23 11:57:00,253 - httpcore.connection - DEBUG - start_tls.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x724fd7005f50>
+2025-11-23 11:57:00,253 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'POST']>
+2025-11-23 11:57:00,254 - httpcore.http11 - DEBUG - send_request_headers.complete
+2025-11-23 11:57:00,254 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'POST']>
+2025-11-23 11:57:00,255 - httpcore.http11 - DEBUG - send_request_body.complete
+2025-11-23 11:57:00,255 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'POST']>
+2025-11-23 11:57:00,304 - httpcore.http11 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Server', b'nginx/1.18.0'), (b'Date', b'Sun, 23 Nov 2025 08:57:00 GMT'), (b'Content-Type', b'application/json'), (b'Content-Length', b'258'), (b'Connection', b'keep-alive'), (b'Strict-Transport-Security', b'max-age=31536000; includeSubDomains; preload'), (b'Access-Control-Allow-Origin', b'*'), (b'Access-Control-Allow-Methods', b'GET, POST, OPTIONS'), (b'Access-Control-Expose-Headers', b'Content-Length,Content-Type,Date,Server,Connection')])
+2025-11-23 11:57:00,305 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8438385382:AAHxYsqXtXoR6BIFIWPyF8xjLaY_MT8aLA0/getMe "HTTP/1.1 200 OK"
+2025-11-23 11:57:00,305 - httpcore.http11 - DEBUG - receive_response_body.started request=<Request [b'POST']>
+2025-11-23 11:57:00,306 - httpcore.http11 - DEBUG - receive_response_body.complete
+2025-11-23 11:57:00,306 - httpcore.http11 - DEBUG - response_closed.started
+2025-11-23 11:57:00,306 - httpcore.http11 - DEBUG - response_closed.complete
+2025-11-23 11:57:00,307 - telegram.ext.ExtBot - DEBUG - User(api_kwargs={'can_connect_to_business': False, 'has_main_web_app': False}, can_join_groups=True, can_read_all_group_messages=False, first_name='nocturna_dev', id=8438385382, is_bot=True, supports_inline_queries=False, username='nocturna_dev_bot')
+2025-11-23 11:57:00,309 - telegram.ext.ExtBot - DEBUG - Exiting: get_me
+2025-11-23 11:57:00,309 - telegram.ext.ExtBot - DEBUG - This Bot is already initialized.
+2025-11-23 11:57:00,309 - telegram.ext.Application - INFO - Application started
+2025-11-23 11:57:00,310 - telegram.ext.Updater - DEBUG - Updater started (polling)
+2025-11-23 11:57:00,310 - telegram.ext.Updater - DEBUG - Start network loop retry bootstrap del webhook
+2025-11-23 11:57:00,310 - telegram.ext.Updater - DEBUG - Deleting webhook
+2025-11-23 11:57:00,310 - telegram.ext.ExtBot - DEBUG - Entering: delete_webhook
+2025-11-23 11:57:00,311 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'POST']>
+2025-11-23 11:57:00,312 - httpcore.http11 - DEBUG - send_request_headers.complete
+2025-11-23 11:57:00,312 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'POST']>
+2025-11-23 11:57:00,312 - httpcore.http11 - DEBUG - send_request_body.complete
+2025-11-23 11:57:00,313 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'POST']>
+2025-11-23 11:57:00,361 - httpcore.http11 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Server', b'nginx/1.18.0'), (b'Date', b'Sun, 23 Nov 2025 08:57:00 GMT'), (b'Content-Type', b'application/json'), (b'Content-Length', b'68'), (b'Connection', b'keep-alive'), (b'Strict-Transport-Security', b'max-age=31536000; includeSubDomains; preload'), (b'Access-Control-Allow-Origin', b'*'), (b'Access-Control-Allow-Methods', b'GET, POST, OPTIONS'), (b'Access-Control-Expose-Headers', b'Content-Length,Content-Type,Date,Server,Connection')])
+2025-11-23 11:57:00,362 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8438385382:AAHxYsqXtXoR6BIFIWPyF8xjLaY_MT8aLA0/deleteWebhook "HTTP/1.1 200 OK"
+2025-11-23 11:57:00,362 - httpcore.http11 - DEBUG - receive_response_body.started request=<Request [b'POST']>
+2025-11-23 11:57:00,362 - httpcore.http11 - DEBUG - receive_response_body.complete
+2025-11-23 11:57:00,362 - httpcore.http11 - DEBUG - response_closed.started
+2025-11-23 11:57:00,363 - httpcore.http11 - DEBUG - response_closed.complete
+2025-11-23 11:57:00,363 - telegram.ext.ExtBot - DEBUG - True
+2025-11-23 11:57:00,363 - telegram.ext.ExtBot - DEBUG - Exiting: delete_webhook
+2025-11-23 11:57:00,364 - telegram.ext.Updater - DEBUG - Bootstrap done
+2025-11-23 11:57:00,364 - telegram.ext.Updater - DEBUG - Waiting for polling to start
+2025-11-23 11:57:00,364 - telegram.ext.Updater - DEBUG - Polling updates from Telegram started
+2025-11-23 11:57:00,364 - telegram.ext.Updater - DEBUG - Start network loop retry getting Updates
+2025-11-23 11:57:00,365 - telegram.ext.ExtBot - DEBUG - Entering: get_updates
+2025-11-23 11:57:00,365 - httpcore.connection - DEBUG - connect_tcp.started host='api.telegram.org' port=443 local_address=None timeout=5.0 socket_options=None
+2025-11-23 11:57:00,422 - httpcore.connection - DEBUG - connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x724fd6e45250>
+2025-11-23 11:57:00,422 - httpcore.connection - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x724fd6f32d50> server_hostname='api.telegram.org' timeout=5.0
+2025-11-23 11:57:00,479 - httpcore.connection - DEBUG - start_tls.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x724fd6e45190>
+2025-11-23 11:57:00,479 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'POST']>
+2025-11-23 11:57:00,479 - httpcore.http11 - DEBUG - send_request_headers.complete
+2025-11-23 11:57:00,480 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'POST']>
+2025-11-23 11:57:00,480 - httpcore.http11 - DEBUG - send_request_body.complete
+2025-11-23 11:57:00,480 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'POST']>
+2025-11-23 11:57:10,540 - httpcore.http11 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Server', b'nginx/1.18.0'), (b'Date', b'Sun, 23 Nov 2025 08:57:10 GMT'), (b'Content-Type', b'application/json'), (b'Content-Length', b'23'), (b'Connection', b'keep-alive'), (b'Strict-Transport-Security', b'max-age=31536000; includeSubDomains; preload'), (b'Access-Control-Allow-Origin', b'*'), (b'Access-Control-Allow-Methods', b'GET, POST, OPTIONS'), (b'Access-Control-Expose-Headers', b'Content-Length,Content-Type,Date,Server,Connection')])
+2025-11-23 11:57:10,540 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8438385382:AAHxYsqXtXoR6BIFIWPyF8xjLaY_MT8aLA0/getUpdates "HTTP/1.1 200 OK"
+2025-11-23 11:57:10,541 - httpcore.http11 - DEBUG - receive_response_body.started request=<Request [b'POST']>
+2025-11-23 11:57:10,541 - httpcore.http11 - DEBUG - receive_response_body.complete
+2025-11-23 11:57:10,542 - httpcore.http11 - DEBUG - response_closed.started
+2025-11-23 11:57:10,542 - httpcore.http11 - DEBUG - response_closed.complete
+2025-11-23 11:57:10,543 - telegram.ext.ExtBot - DEBUG - No new updates found.
+2025-11-23 11:57:10,543 - telegram.ext.ExtBot - DEBUG - ()
+2025-11-23 11:57:10,543 - telegram.ext.ExtBot - DEBUG - Exiting: get_updates
+2025-11-23 11:57:10,544 - telegram.ext.ExtBot - DEBUG - Entering: get_updates
+2025-11-23 11:57:10,545 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'POST']>
+2025-11-23 11:57:10,545 - httpcore.http11 - DEBUG - send_request_headers.complete
+2025-11-23 11:57:10,546 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'POST']>
+2025-11-23 11:57:10,546 - httpcore.http11 - DEBUG - send_request_body.complete
+2025-11-23 11:57:10,547 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'POST']>
+2025-11-23 11:57:20,549 - httpcore.http11 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Server', b'nginx/1.18.0'), (b'Date', b'Sun, 23 Nov 2025 08:57:20 GMT'), (b'Content-Type', b'application/json'), (b'Content-Length', b'23'), (b'Connection', b'keep-alive'), (b'Strict-Transport-Security', b'max-age=31536000; includeSubDomains; preload'), (b'Access-Control-Allow-Origin', b'*'), (b'Access-Control-Allow-Methods', b'GET, POST, OPTIONS'), (b'Access-Control-Expose-Headers', b'Content-Length,Content-Type,Date,Server,Connection')])
+2025-11-23 11:57:20,550 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8438385382:AAHxYsqXtXoR6BIFIWPyF8xjLaY_MT8aLA0/getUpdates "HTTP/1.1 200 OK"
+2025-11-23 11:57:20,550 - httpcore.http11 - DEBUG - receive_response_body.started request=<Request [b'POST']>
+2025-11-23 11:57:20,551 - httpcore.http11 - DEBUG - receive_response_body.complete
+2025-11-23 11:57:20,551 - httpcore.http11 - DEBUG - response_closed.started
+2025-11-23 11:57:20,552 - httpcore.http11 - DEBUG - response_closed.complete
+2025-11-23 11:57:20,552 - telegram.ext.ExtBot - DEBUG - No new updates found.
+2025-11-23 11:57:20,553 - telegram.ext.ExtBot - DEBUG - ()
+2025-11-23 11:57:20,553 - telegram.ext.ExtBot - DEBUG - Exiting: get_updates
+2025-11-23 11:57:20,554 - telegram.ext.ExtBot - DEBUG - Entering: get_updates
+2025-11-23 11:57:20,555 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'POST']>
+2025-11-23 11:57:20,555 - httpcore.http11 - DEBUG - send_request_headers.complete
+2025-11-23 11:57:20,556 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'POST']>
+2025-11-23 11:57:20,556 - httpcore.http11 - DEBUG - send_request_body.complete
+2025-11-23 11:57:20,557 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'POST']>
+2025-11-23 11:57:25,196 - httpcore.http11 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Server', b'nginx/1.18.0'), (b'Date', b'Sun, 23 Nov 2025 08:57:25 GMT'), (b'Content-Type', b'application/json'), (b'Content-Length', b'431'), (b'Connection', b'keep-alive'), (b'Strict-Transport-Security', b'max-age=31536000; includeSubDomains; preload'), (b'Access-Control-Allow-Origin', b'*'), (b'Access-Control-Allow-Methods', b'GET, POST, OPTIONS'), (b'Access-Control-Expose-Headers', b'Content-Length,Content-Type,Date,Server,Connection')])
+2025-11-23 11:57:25,197 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8438385382:AAHxYsqXtXoR6BIFIWPyF8xjLaY_MT8aLA0/getUpdates "HTTP/1.1 200 OK"
+2025-11-23 11:57:25,198 - httpcore.http11 - DEBUG - receive_response_body.started request=<Request [b'POST']>
+2025-11-23 11:57:25,198 - httpcore.http11 - DEBUG - receive_response_body.complete
+2025-11-23 11:57:25,198 - httpcore.http11 - DEBUG - response_closed.started
+2025-11-23 11:57:25,199 - httpcore.http11 - DEBUG - response_closed.complete
+2025-11-23 11:57:25,199 - telegram.ext.ExtBot - DEBUG - Getting updates: [773744857]
+2025-11-23 11:57:25,200 - telegram.ext.ExtBot - DEBUG - (Update(message=Message(channel_chat_created=False, chat=Chat(first_name='Yegor', id=93791246, last_name='Aprelsky', type=<ChatType.PRIVATE>, username='yegor_aprelsky'), date=datetime.datetime(2025, 11, 23, 8, 57, 25, tzinfo=<UTC>), delete_chat_photo=False, entities=(MessageEntity(length=8, offset=0, type=<MessageEntityType.BOT_COMMAND>),), from_user=User(first_name='Yegor', id=93791246, is_bot=False, is_premium=True, language_code='ru', last_name='Aprelsky', username='yegor_aprelsky'), group_chat_created=False, message_id=179, supergroup_chat_created=False, text='/transit'), update_id=773744857),)
+2025-11-23 11:57:25,201 - telegram.ext.ExtBot - DEBUG - Exiting: get_updates
+2025-11-23 11:57:25,202 - telegram.ext.Application - DEBUG - Processing update Update(message=Message(channel_chat_created=False, chat=Chat(first_name='Yegor', id=93791246, last_name='Aprelsky', type=<ChatType.PRIVATE>, username='yegor_aprelsky'), date=datetime.datetime(2025, 11, 23, 8, 57, 25, tzinfo=<UTC>), delete_chat_photo=False, entities=(MessageEntity(length=8, offset=0, type=<MessageEntityType.BOT_COMMAND>),), from_user=User(first_name='Yegor', id=93791246, is_bot=False, is_premium=True, language_code='ru', last_name='Aprelsky', username='yegor_aprelsky'), group_chat_created=False, message_id=179, supergroup_chat_created=False, text='/transit'), update_id=773744857)
+2025-11-23 11:57:25,203 - src.bot.handlers - INFO - User 93791246 requested transit chart
+2025-11-23 11:57:25,203 - telegram.ext.ExtBot - DEBUG - Entering: send_message
+2025-11-23 11:57:25,204 - httpcore.connection - DEBUG - close.started
+2025-11-23 11:57:25,204 - httpcore.connection - DEBUG - close.complete
+2025-11-23 11:57:25,205 - httpcore.connection - DEBUG - connect_tcp.started host='api.telegram.org' port=443 local_address=None timeout=5.0 socket_options=None
+2025-11-23 11:57:25,206 - telegram.ext.ExtBot - DEBUG - Entering: get_updates
+2025-11-23 11:57:25,207 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'POST']>
+2025-11-23 11:57:25,208 - httpcore.http11 - DEBUG - send_request_headers.complete
+2025-11-23 11:57:25,208 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'POST']>
+2025-11-23 11:57:25,209 - httpcore.http11 - DEBUG - send_request_body.complete
+2025-11-23 11:57:25,209 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'POST']>
+2025-11-23 11:57:25,266 - httpcore.connection - DEBUG - connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x724fd6e26bd0>
+2025-11-23 11:57:25,266 - httpcore.connection - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x724fd6f32cc0> server_hostname='api.telegram.org' timeout=5.0
+2025-11-23 11:57:25,328 - httpcore.connection - DEBUG - start_tls.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x724fd719ded0>
+2025-11-23 11:57:25,329 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'POST']>
+2025-11-23 11:57:25,330 - httpcore.http11 - DEBUG - send_request_headers.complete
+2025-11-23 11:57:25,330 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'POST']>
+2025-11-23 11:57:25,331 - httpcore.http11 - DEBUG - send_request_body.complete
+2025-11-23 11:57:25,331 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'POST']>
+2025-11-23 11:57:25,507 - httpcore.http11 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Server', b'nginx/1.18.0'), (b'Date', b'Sun, 23 Nov 2025 08:57:25 GMT'), (b'Content-Type', b'application/json'), (b'Content-Length', b'536'), (b'Connection', b'keep-alive'), (b'Strict-Transport-Security', b'max-age=31536000; includeSubDomains; preload'), (b'Access-Control-Allow-Origin', b'*'), (b'Access-Control-Allow-Methods', b'GET, POST, OPTIONS'), (b'Access-Control-Expose-Headers', b'Content-Length,Content-Type,Date,Server,Connection')])
+2025-11-23 11:57:25,509 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8438385382:AAHxYsqXtXoR6BIFIWPyF8xjLaY_MT8aLA0/sendMessage "HTTP/1.1 200 OK"
+2025-11-23 11:57:25,509 - httpcore.http11 - DEBUG - receive_response_body.started request=<Request [b'POST']>
+2025-11-23 11:57:25,510 - httpcore.http11 - DEBUG - receive_response_body.complete
+2025-11-23 11:57:25,511 - httpcore.http11 - DEBUG - response_closed.started
+2025-11-23 11:57:25,511 - httpcore.http11 - DEBUG - response_closed.complete
+2025-11-23 11:57:25,512 - telegram.ext.ExtBot - DEBUG - Message(channel_chat_created=False, chat=Chat(first_name='Yegor', id=93791246, last_name='Aprelsky', type=<ChatType.PRIVATE>, username='yegor_aprelsky'), date=datetime.datetime(2025, 11, 23, 8, 57, 25, tzinfo=<UTC>), delete_chat_photo=False, from_user=User(first_name='nocturna_dev', id=8438385382, is_bot=True, username='nocturna_dev_bot'), group_chat_created=False, message_id=180, supergroup_chat_created=False, text='⏳ Генерирую изображение текущей карты транзитов...')
+2025-11-23 11:57:25,513 - telegram.ext.ExtBot - DEBUG - Exiting: send_message
+2025-11-23 11:57:25,513 - src.services.chart_service - INFO - Generating transit chart for 2025-11-23 11:57:25
+2025-11-23 11:57:25,515 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): calculations.nocturna.ru:443
+2025-11-23 11:57:26,149 - urllib3.connectionpool - DEBUG - https://calculations.nocturna.ru:443 "POST /api/calculations/planetary-positions HTTP/1.1" 200 2340
+2025-11-23 11:57:26,163 - urllib3.connectionpool - DEBUG - https://calculations.nocturna.ru:443 "POST /api/calculations/houses HTTP/1.1" 200 1416
+2025-11-23 11:57:26,164 - src.services.chart_service - DEBUG - Received positions from Nocturna API: [{'planet': 'SUN', 'longitude': 241.32080720551602, 'latitude': -0.00011893690246065132, 'distance': 0.9875332531359149, 'speed': 1.0109303935465064, 'is_retrograde': False, 'house': None, 'sign': 'SAGITTARIUS', 'degree': 1.0, 'minute': 19.0, 'second': 14.0}, {'planet': 'MOON', 'longitude': 275.0410869591147, 'latitude': -4.697015329993476, 'distance': 0.0026951940059311303, 'speed': 12.022078665460558, 'is_retrograde': False, 'house': None, 'sign': 'CAPRICORN', 'degree': 5.0, 'minute': 2.0, 'second': 27.0}, {'planet': 'MERCURY', 'longitude': 234.4854990794404, 'latitude': 1.472728366410466, 'distance': 0.6971624366384886, 'speed': -1.142569937836284, 'is_retrograde': True, 'house': None, 'sign': 'SCORPIO', 'degree': 24.0, 'minute': 29.0, 'second': 7.0}, {'planet': 'VENUS', 'longitude': 230.61155003148716, 'latitude': 0.9651363655435813, 'distance': 1.6691098957108677, 'speed': 1.2564896714770728, 'is_retrograde': False, 'house': None, 'sign': 'SCORPIO', 'degree': 20.0, 'minute': 36.0, 'second': 41.0}, {'planet': 'MARS', 'longitude': 253.66421070522372, 'latitude': -0.5986773515752996, 'distance': 2.4230959356373796, 'speed': 0.7348425122888731, 'is_retrograde': False, 'house': None, 'sign': 'SAGITTARIUS', 'degree': 13.0, 'minute': 39.0, 'second': 51.0}, {'planet': 'JUPITER', 'longitude': 114.92468452455303, 'latitude': 0.13974381910615088, 'distance': 4.550607962819529, 'speed': -0.03887839127221548, 'is_retrograde': True, 'house': None, 'sign': 'CANCER', 'degree': 24.0, 'minute': 55.0, 'second': 28.0}, {'planet': 'SATURN', 'longitude': 355.17805759593506, 'latitude': -2.3948998111416717, 'distance': 9.088640415704905, 'speed': -0.008551038512821895, 'is_retrograde': True, 'house': None, 'sign': 'PISCES', 'degree': 25.0, 'minute': 10.0, 'second': 41.0}, {'planet': 'URANUS', 'longitude': 59.36794378637455, 'latitude': -0.20634045724067349, 'distance': 18.509996775164648, 'speed': -0.04182949155108608, 'is_retrograde': True, 'house': None, 'sign': 'TAURUS', 'degree': 29.0, 'minute': 22.0, 'second': 4.0}, {'planet': 'NEPTUNE', 'longitude': 359.455214200618, 'latitude': -1.357060244918606, 'distance': 29.40774759439962, 'speed': -0.009535449639103888, 'is_retrograde': True, 'house': None, 'sign': 'PISCES', 'degree': 29.0, 'minute': 27.0, 'second': 18.0}, {'planet': 'PLUTO', 'longitude': 301.7493577058805, 'latitude': -3.7636869851846697, 'distance': 35.87055570554901, 'speed': 0.018575621248989174, 'is_retrograde': False, 'house': None, 'sign': 'AQUARIUS', 'degree': 1.0, 'minute': 44.0, 'second': 57.0}]
+2025-11-23 11:57:26,164 - src.services.chart_service - DEBUG - Received houses from Nocturna API: [{'number': 1, 'longitude': 285.71879402427123, 'latitude': 0.0, 'sign': 'CAPRICORN', 'degree': 15.0, 'minute': 43.0, 'second': 7.0}, {'number': 2, 'longitude': 349.73512163823204, 'latitude': 0.0, 'sign': 'PISCES', 'degree': 19.0, 'minute': 44.0, 'second': 6.0}, {'number': 3, 'longitude': 33.147905004220874, 'latitude': 0.0, 'sign': 'TAURUS', 'degree': 3.0, 'minute': 8.0, 'second': 52.0}, {'number': 4, 'longitude': 56.85659936699392, 'latitude': 0.0, 'sign': 'TAURUS', 'degree': 26.0, 'minute': 51.0, 'second': 23.0}, {'number': 5, 'longitude': 73.51590516278702, 'latitude': 0.0, 'sign': 'GEMINI', 'degree': 13.0, 'minute': 30.0, 'second': 57.0}, {'number': 6, 'longitude': 88.3521028512597, 'latitude': 0.0, 'sign': 'GEMINI', 'degree': 28.0, 'minute': 21.0, 'second': 7.0}, {'number': 7, 'longitude': 105.71879402427123, 'latitude': 0.0, 'sign': 'CANCER', 'degree': 15.0, 'minute': 43.0, 'second': 7.0}, {'number': 8, 'longitude': 169.73512163823204, 'latitude': 0.0, 'sign': 'VIRGO', 'degree': 19.0, 'minute': 44.0, 'second': 6.0}, {'number': 9, 'longitude': 213.1479050042209, 'latitude': 0.0, 'sign': 'SCORPIO', 'degree': 3.0, 'minute': 8.0, 'second': 52.0}, {'number': 10, 'longitude': 236.8565993669939, 'latitude': 0.0, 'sign': 'SCORPIO', 'degree': 26.0, 'minute': 51.0, 'second': 23.0}, {'number': 11, 'longitude': 253.51590516278705, 'latitude': 0.0, 'sign': 'SAGITTARIUS', 'degree': 13.0, 'minute': 30.0, 'second': 57.0}, {'number': 12, 'longitude': 268.3521028512597, 'latitude': 0.0, 'sign': 'SAGITTARIUS', 'degree': 28.0, 'minute': 21.0, 'second': 7.0}]
+2025-11-23 11:57:26,165 - src.services.chart_service - DEBUG - Converted planets for chart service: {'sun': {'lon': 241.32080720551602, 'lat': -0.00011893690246065132, 'retrograde': False}, 'moon': {'lon': 275.0410869591147, 'lat': -4.697015329993476, 'retrograde': False}, 'mercury': {'lon': 234.4854990794404, 'lat': 1.472728366410466, 'retrograde': True}, 'venus': {'lon': 230.61155003148716, 'lat': 0.9651363655435813, 'retrograde': False}, 'mars': {'lon': 253.66421070522372, 'lat': -0.5986773515752996, 'retrograde': False}, 'jupiter': {'lon': 114.92468452455303, 'lat': 0.13974381910615088, 'retrograde': True}, 'saturn': {'lon': 355.17805759593506, 'lat': -2.3948998111416717, 'retrograde': True}, 'uranus': {'lon': 59.36794378637455, 'lat': -0.20634045724067349, 'retrograde': True}, 'neptune': {'lon': 359.455214200618, 'lat': -1.357060244918606, 'retrograde': True}, 'pluto': {'lon': 301.7493577058805, 'lat': -3.7636869851846697, 'retrograde': False}}
+2025-11-23 11:57:26,165 - src.services.chart_service - DEBUG - Converted houses for chart service: [{'lon': 285.71879402427123}, {'lon': 349.73512163823204}, {'lon': 33.147905004220874}, {'lon': 56.85659936699392}, {'lon': 73.51590516278702}, {'lon': 88.3521028512597}, {'lon': 105.71879402427123}, {'lon': 169.73512163823204}, {'lon': 213.1479050042209}, {'lon': 236.8565993669939}, {'lon': 253.51590516278705}, {'lon': 268.3521028512597}]
+2025-11-23 11:57:26,165 - src.services.chart_service - INFO - Houses data - First house longitude: 285.71879402427123
+2025-11-23 11:57:26,166 - src.api.chart_service_client - INFO - Requesting chart render (attempt 1/3)
+2025-11-23 11:57:26,166 - src.api.chart_service_client - DEBUG - Chart render request payload: {'planets': {'sun': {'lon': 241.32080720551602, 'lat': -0.00011893690246065132, 'retrograde': False}, 'moon': {'lon': 275.0410869591147, 'lat': -4.697015329993476, 'retrograde': False}, 'mercury': {'lon': 234.4854990794404, 'lat': 1.472728366410466, 'retrograde': True}, 'venus': {'lon': 230.61155003148716, 'lat': 0.9651363655435813, 'retrograde': False}, 'mars': {'lon': 253.66421070522372, 'lat': -0.5986773515752996, 'retrograde': False}, 'jupiter': {'lon': 114.92468452455303, 'lat': 0.13974381910615088, 'retrograde': True}, 'saturn': {'lon': 355.17805759593506, 'lat': -2.3948998111416717, 'retrograde': True}, 'uranus': {'lon': 59.36794378637455, 'lat': -0.20634045724067349, 'retrograde': True}, 'neptune': {'lon': 359.455214200618, 'lat': -1.357060244918606, 'retrograde': True}, 'pluto': {'lon': 301.7493577058805, 'lat': -3.7636869851846697, 'retrograde': False}}, 'houses': [{'lon': 285.71879402427123}, {'lon': 349.73512163823204}, {'lon': 33.147905004220874}, {'lon': 56.85659936699392}, {'lon': 73.51590516278702}, {'lon': 88.3521028512597}, {'lon': 105.71879402427123}, {'lon': 169.73512163823204}, {'lon': 213.1479050042209}, {'lon': 236.8565993669939}, {'lon': 253.51590516278705}, {'lon': 268.3521028512597}], 'aspectSettings': {'enabled': True, 'orb': 6, 'types': {'conjunction': {'enabled': True}, 'opposition': {'enabled': True}, 'trine': {'enabled': True}, 'square': {'enabled': True}, 'sextile': {'enabled': True}}}, 'renderOptions': {'format': 'png', 'width': 800, 'height': 800, 'quality': 90, 'theme': 'light'}}
+2025-11-23 11:57:26,167 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:3011
+2025-11-23 11:57:30,095 - urllib3.connectionpool - DEBUG - http://localhost:3011 "POST /api/v1/chart/render HTTP/1.1" 200 155115
+2025-11-23 11:57:30,098 - src.api.chart_service_client - INFO - Chart rendered successfully: 116189 bytes, 3768ms
+2025-11-23 11:57:30,099 - src.services.chart_service - INFO - Chart generated successfully: 116189 bytes
+2025-11-23 11:57:30,099 - telegram.ext.ExtBot - DEBUG - Entering: send_photo
+2025-11-23 11:57:30,100 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'POST']>
+2025-11-23 11:57:30,101 - httpcore.http11 - DEBUG - send_request_headers.complete
+2025-11-23 11:57:30,102 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'POST']>
+2025-11-23 11:57:30,154 - httpcore.http11 - DEBUG - send_request_body.complete
+2025-11-23 11:57:30,154 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'POST']>
+2025-11-23 11:57:30,620 - httpcore.http11 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Server', b'nginx/1.18.0'), (b'Date', b'Sun, 23 Nov 2025 08:57:30 GMT'), (b'Content-Type', b'application/json'), (b'Content-Length', b'955'), (b'Connection', b'keep-alive'), (b'Strict-Transport-Security', b'max-age=31536000; includeSubDomains; preload'), (b'Access-Control-Allow-Origin', b'*'), (b'Access-Control-Allow-Methods', b'GET, POST, OPTIONS'), (b'Access-Control-Expose-Headers', b'Content-Length,Content-Type,Date,Server,Connection')])
+2025-11-23 11:57:30,620 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8438385382:AAHxYsqXtXoR6BIFIWPyF8xjLaY_MT8aLA0/sendPhoto "HTTP/1.1 200 OK"
+2025-11-23 11:57:30,621 - httpcore.http11 - DEBUG - receive_response_body.started request=<Request [b'POST']>
+2025-11-23 11:57:30,621 - httpcore.http11 - DEBUG - receive_response_body.complete
+2025-11-23 11:57:30,622 - httpcore.http11 - DEBUG - response_closed.started
+2025-11-23 11:57:30,622 - httpcore.http11 - DEBUG - response_closed.complete
+2025-11-23 11:57:30,623 - telegram.ext.ExtBot - DEBUG - Message(caption='🌟 Текущая карта транзитов', channel_chat_created=False, chat=Chat(first_name='Yegor', id=93791246, last_name='Aprelsky', type=<ChatType.PRIVATE>, username='yegor_aprelsky'), date=datetime.datetime(2025, 11, 23, 8, 57, 30, tzinfo=<UTC>), delete_chat_photo=False, from_user=User(first_name='nocturna_dev', id=8438385382, is_bot=True, username='nocturna_dev_bot'), group_chat_created=False, message_id=181, photo=(PhotoSize(file_id='AgACAgIAAxkDAAO1aSLMelqMxVu7ojkKbZIKKQtFnMgAAlQNaxscZBlJVB17Dp5Wom8BAAMCAANzAAM2BA', file_size=1230, file_unique_id='AQADVA1rGxxkGUl4', height=90, width=90), PhotoSize(file_id='AgACAgIAAxkDAAO1aSLMelqMxVu7ojkKbZIKKQtFnMgAAlQNaxscZBlJVB17Dp5Wom8BAAMCAANtAAM2BA', file_size=20181, file_unique_id='AQADVA1rGxxkGUly', height=320, width=320), PhotoSize(file_id='AgACAgIAAxkDAAO1aSLMelqMxVu7ojkKbZIKKQtFnMgAAlQNaxscZBlJVB17Dp5Wom8BAAMCAAN4AAM2BA', file_size=70676, file_unique_id='AQADVA1rGxxkGUl9', height=800, width=800)), supergroup_chat_created=False)
+2025-11-23 11:57:30,624 - telegram.ext.ExtBot - DEBUG - Exiting: send_photo
+2025-11-23 11:57:30,624 - src.services.transit_service - INFO - Calculating positions for 2025-11-23 11:57:30
+2025-11-23 11:57:30,640 - urllib3.connectionpool - DEBUG - https://calculations.nocturna.ru:443 "POST /api/calculations/planetary-positions HTTP/1.1" 200 2340
+2025-11-23 11:57:30,641 - src.services.transit_service - INFO - Calculating aspects for 2025-11-23 11:57:30
+2025-11-23 11:57:30,669 - urllib3.connectionpool - DEBUG - https://calculations.nocturna.ru:443 "POST /api/calculations/aspects HTTP/1.1" 200 5447
+2025-11-23 11:57:30,670 - src.services.transit_service - INFO - Generating LLM interpretation...
+2025-11-23 11:57:30,671 - src.api.openrouter_client - INFO - Calling OpenRouter API with model anthropic/claude-haiku-4.5
+2025-11-23 11:57:30,676 - openai._base_client - DEBUG - Request options: {'method': 'post', 'url': '/chat/completions', 'files': None, 'json_data': {'messages': [{'role': 'system', 'content': 'Ты — опытный астролог с глубокими знаниями западной астрологии. \nТвоя задача — дать краткую, но содержательную интерпретацию текущего транзита планет, ориентированную на повседневную жизнь людей.\n\nЭто анализ энергий дня, он не учитывает влияние на конкретного человека, поэтому избегай использования личных местоимений. Говори об энергиях дня в целом.\n\nТвой анализ должен:\n- Быть написан на русском языке.\n- Быть понятным для обычного человека (избегай сложной терминологии).\n- Фокусироваться на практических аспектах и влиянии на повседневную жизнь.\n- Быть позитивным, но реалистичным.\n- Быть кратким (максимум 400-500 слов).\n- Выделять наиболее важные влияния.\n- НЕ ИСПОЛЬЗОВАТЬ ЗАГОЛОВКИ ИЛИ MARKDOWN форматирование (например, #, ##, ***, ---). Используй только абзацы и обычный текст.\n\nСтруктура ответа:\n1. Общая энергия дня (1-2 предложения, ключевая тема).\n2. Влияние на отношения и общение (как планетарные энергии могут отразиться на взаимодействии с окружающими).\n3. Влияние на работу, карьеру и финансы (какие возможности или вызовы могут возникнуть в этих сферах).\n4. Влияние на эмоциональное состояние и внутренний мир (как текущие транзиты сказываются на чувствах и самочувствии).\n5. Практические рекомендации (что благоприятно делать, чего стоит избегать, на что обратить внимание).\n6. Совет дня (краткое вдохновляющее заключение).\n\nИспользуй эмодзи для визуального акцента (но умеренно и только в начале абзацев).'}, {'role': 'user', 'content': "Проанализируй следующую астрологическую картину дня:\n\nТекущие позиции планет:\n- SUN в SAGITTARIUS 1°19'\n- MOON в CAPRICORN 5°02'\n- MERCURY в SCORPIO 24°29' (ретроградный)\n- VENUS в SCORPIO 20°36'\n- MARS в SAGITTARIUS 13°39'\n- JUPITER в CANCER 24°55' (ретроградный)\n- SATURN в PISCES 25°10' (ретроградный)\n- URANUS в TAURUS 29°22' (ретроградный)\n- NEPTUNE в PISCES 29°27' (ретроградный)\n- PLUTO в AQUARIUS 1°44'\n\nТекущие аспекты:\n- SUN conjunction MERCURY (орб 6.8°) (расходящийся)\n- SUN trine JUPITER (орб 6.4°) (расходящийся)\n- SUN trine SATURN (орб 6.1°) (сходящийся)\n- SUN opposition URANUS (орб 2.0°) (сходящийся)\n- SUN trine NEPTUNE (орб 1.9°) (сходящийся)\n- SUN sextile PLUTO (орб 0.4°) (расходящийся)\n- MOON novile MERCURY (орб 0.6°) (расходящийся)\n- MOON semisquare VENUS (орб 0.6°) (сходящийся)\n- MOON triseptile JUPITER (орб 5.8°) (расходящийся)\n- MOON quadrinovile JUPITER (орб 0.1°) (расходящийся)\n- MOON binovile SATURN (орб 0.1°) (расходящийся)\n- MOON biquintile URANUS (орб 0.3°) (расходящийся)\n- MOON triseptile URANUS (орб 10.0°) (сходящийся)\n- MOON quadrinovile URANUS (орб 15.7°) (сходящийся)\n- MOON square NEPTUNE (орб 5.6°) (сходящийся)\n- MOON binovile NEPTUNE (орб 4.4°) (расходящийся)\n- MERCURY conjunction VENUS (орб 3.9°) (расходящийся)\n- MERCURY trine JUPITER (орб 0.4°) (сходящийся)\n- MERCURY trine SATURN (орб 0.7°) (расходящийся)\n- MERCURY opposition URANUS (орб 4.9°) (сходящийся)\n- MERCURY quadrinovile URANUS (орб 15.1°) (расходящийся)\n- MERCURY trine NEPTUNE (орб 5.0°) (расходящийся)\n- VENUS trine JUPITER (орб 4.3°) (сходящийся)\n- VENUS trine SATURN (орб 4.6°) (расходящийся)\n- VENUS opposition URANUS (орб 8.8°) (сходящийся)\n- VENUS quadrinovile URANUS (орб 11.2°) (расходящийся)\n- VENUS quintile PLUTO (орб 0.9°) (сходящийся)\n- MARS biseptile SATURN (орб 1.3°) (сходящийся)\n- MARS triseptile URANUS (орб 11.4°) (расходящийся)\n- MARS quadrinovile URANUS (орб 5.7°) (расходящийся)\n- MARS biseptile NEPTUNE (орб 2.9°) (расходящийся)\n- MARS septile PLUTO (орб 3.3°) (сходящийся)\n- JUPITER trine SATURN (орб 0.3°) (сходящийся)\n- JUPITER sextile URANUS (орб 4.4°) (сходящийся)\n- JUPITER septile URANUS (орб 4.1°) (расходящийся)\n- JUPITER trine NEPTUNE (орб 4.5°) (сходящийся)\n- JUPITER opposition PLUTO (орб 6.8°) (сходящийся)\n- JUPITER quadrinovile PLUTO (орб 13.2°) (расходящийся)\n- SATURN sextile URANUS (орб 4.2°) (расходящийся)\n- SATURN conjunction NEPTUNE (орб 4.3°) (расходящийся)\n- SATURN septile PLUTO (орб 2.0°) (расходящийся)\n- URANUS sextile NEPTUNE (орб 0.1°) (сходящийся)\n- URANUS trine PLUTO (орб 2.4°) (сходящийся)\n- NEPTUNE sextile PLUTO (орб 2.3°) (сходящийся)\n\nНа основе этих данных, пожалуйста, предоставь краткую интерпретацию, следуя указанной выше структуре и правилам форматирования. "}], 'model': 'anthropic/claude-haiku-4.5', 'max_tokens': 1500, 'temperature': 0.7}}
+2025-11-23 11:57:30,681 - openai._base_client - DEBUG - Sending HTTP Request: POST https://openrouter.ai/api/v1/chat/completions
+2025-11-23 11:57:30,682 - httpcore.connection - DEBUG - connect_tcp.started host='openrouter.ai' port=443 local_address=None timeout=60.0 socket_options=None
+2025-11-23 11:57:30,756 - httpcore.connection - DEBUG - connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x724fd70e6990>
+2025-11-23 11:57:30,757 - httpcore.connection - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x724fd6f32c30> server_hostname='openrouter.ai' timeout=60.0
+2025-11-23 11:57:30,808 - httpcore.connection - DEBUG - start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x724fd70f8710>
+2025-11-23 11:57:30,808 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'POST']>
+2025-11-23 11:57:30,809 - httpcore.http11 - DEBUG - send_request_headers.complete
+2025-11-23 11:57:30,809 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'POST']>
+2025-11-23 11:57:30,810 - httpcore.http11 - DEBUG - send_request_body.complete
+2025-11-23 11:57:30,810 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'POST']>
+2025-11-23 11:57:32,381 - httpcore.http11 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Date', b'Sun, 23 Nov 2025 08:57:32 GMT'), (b'Content-Type', b'application/json'), (b'Transfer-Encoding', b'chunked'), (b'Connection', b'keep-alive'), (b'Content-Encoding', b'gzip'), (b'Access-Control-Allow-Origin', b'*'), (b'Vary', b'Accept-Encoding'), (b'Permissions-Policy', b'payment=(self "https://checkout.stripe.com" "https://connect-js.stripe.com" "https://js.stripe.com" "https://*.js.stripe.com" "https://hooks.stripe.com")'), (b'Referrer-Policy', b'no-referrer, strict-origin-when-cross-origin'), (b'X-Content-Type-Options', b'nosniff'), (b'Server', b'cloudflare'), (b'CF-RAY', b'9a2f75a08fc33820-FRA')])
+2025-11-23 11:57:32,381 - httpx - INFO - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-23 11:57:32,382 - httpcore.http11 - DEBUG - receive_response_body.started request=<Request [b'POST']>
+2025-11-23 11:57:40,728 - httpcore.http11 - DEBUG - receive_response_body.complete
+2025-11-23 11:57:40,729 - httpcore.http11 - DEBUG - response_closed.started
+2025-11-23 11:57:40,729 - httpcore.http11 - DEBUG - response_closed.complete
+2025-11-23 11:57:40,730 - openai._base_client - DEBUG - HTTP Response: POST https://openrouter.ai/api/v1/chat/completions "200 OK" Headers({'date': 'Sun, 23 Nov 2025 08:57:32 GMT', 'content-type': 'application/json', 'transfer-encoding': 'chunked', 'connection': 'keep-alive', 'content-encoding': 'gzip', 'access-control-allow-origin': '*', 'vary': 'Accept-Encoding', 'permissions-policy': 'payment=(self "https://checkout.stripe.com" "https://connect-js.stripe.com" "https://js.stripe.com" "https://*.js.stripe.com" "https://hooks.stripe.com")', 'referrer-policy': 'no-referrer, strict-origin-when-cross-origin', 'x-content-type-options': 'nosniff', 'server': 'cloudflare', 'cf-ray': '9a2f75a08fc33820-FRA'})
+2025-11-23 11:57:40,730 - openai._base_client - DEBUG - request_id: None
+2025-11-23 11:57:40,734 - src.api.openrouter_client - INFO - Received response: 2137 characters
+2025-11-23 11:57:40,734 - telegram.ext.ExtBot - DEBUG - Entering: send_message
+2025-11-23 11:57:40,736 - httpcore.connection - DEBUG - close.started
+2025-11-23 11:57:40,736 - httpcore.connection - DEBUG - close.complete
+2025-11-23 11:57:40,737 - httpcore.connection - DEBUG - connect_tcp.started host='api.telegram.org' port=443 local_address=None timeout=5.0 socket_options=None
+2025-11-23 11:57:40,738 - httpcore.http11 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Server', b'nginx/1.18.0'), (b'Date', b'Sun, 23 Nov 2025 08:57:35 GMT'), (b'Content-Type', b'application/json'), (b'Content-Length', b'23'), (b'Connection', b'keep-alive'), (b'Strict-Transport-Security', b'max-age=31536000; includeSubDomains; preload'), (b'Access-Control-Allow-Origin', b'*'), (b'Access-Control-Allow-Methods', b'GET, POST, OPTIONS'), (b'Access-Control-Expose-Headers', b'Content-Length,Content-Type,Date,Server,Connection')])
+2025-11-23 11:57:40,738 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8438385382:AAHxYsqXtXoR6BIFIWPyF8xjLaY_MT8aLA0/getUpdates "HTTP/1.1 200 OK"
+2025-11-23 11:57:40,739 - httpcore.http11 - DEBUG - receive_response_body.started request=<Request [b'POST']>
+2025-11-23 11:57:40,739 - httpcore.http11 - DEBUG - receive_response_body.complete
+2025-11-23 11:57:40,740 - httpcore.http11 - DEBUG - response_closed.started
+2025-11-23 11:57:40,740 - httpcore.http11 - DEBUG - response_closed.complete
+2025-11-23 11:57:40,741 - telegram.ext.ExtBot - DEBUG - No new updates found.
+2025-11-23 11:57:40,741 - telegram.ext.ExtBot - DEBUG - ()
+2025-11-23 11:57:40,741 - telegram.ext.ExtBot - DEBUG - Exiting: get_updates
+2025-11-23 11:57:40,742 - telegram.ext.ExtBot - DEBUG - Entering: get_updates
+2025-11-23 11:57:40,743 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'POST']>
+2025-11-23 11:57:40,744 - httpcore.http11 - DEBUG - send_request_headers.complete
+2025-11-23 11:57:40,744 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'POST']>
+2025-11-23 11:57:40,745 - httpcore.http11 - DEBUG - send_request_body.complete
+2025-11-23 11:57:40,745 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'POST']>
+2025-11-23 11:57:40,789 - httpcore.connection - DEBUG - connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x724fd6fb5090>
+2025-11-23 11:57:40,790 - httpcore.connection - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x724fd6f32cc0> server_hostname='api.telegram.org' timeout=5.0
+2025-11-23 11:57:40,846 - httpcore.connection - DEBUG - start_tls.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x724fd6fb5250>
+2025-11-23 11:57:40,847 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'POST']>
+2025-11-23 11:57:40,848 - httpcore.http11 - DEBUG - send_request_headers.complete
+2025-11-23 11:57:40,848 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'POST']>
+2025-11-23 11:57:40,849 - httpcore.http11 - DEBUG - send_request_body.complete
+2025-11-23 11:57:40,849 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'POST']>
+2025-11-23 11:57:40,962 - httpcore.http11 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Server', b'nginx/1.18.0'), (b'Date', b'Sun, 23 Nov 2025 08:57:41 GMT'), (b'Content-Type', b'application/json'), (b'Content-Length', b'11700'), (b'Connection', b'keep-alive'), (b'Strict-Transport-Security', b'max-age=31536000; includeSubDomains; preload'), (b'Access-Control-Allow-Origin', b'*'), (b'Access-Control-Allow-Methods', b'GET, POST, OPTIONS'), (b'Access-Control-Expose-Headers', b'Content-Length,Content-Type,Date,Server,Connection')])
+2025-11-23 11:57:40,996 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8438385382:AAHxYsqXtXoR6BIFIWPyF8xjLaY_MT8aLA0/sendMessage "HTTP/1.1 200 OK"
+2025-11-23 11:57:40,997 - httpcore.http11 - DEBUG - receive_response_body.started request=<Request [b'POST']>
+2025-11-23 11:57:40,999 - httpcore.http11 - DEBUG - receive_response_body.complete
+2025-11-23 11:57:41,000 - httpcore.http11 - DEBUG - response_closed.started
+2025-11-23 11:57:41,000 - httpcore.http11 - DEBUG - response_closed.complete
+2025-11-23 11:57:41,002 - telegram.ext.ExtBot - DEBUG - Message(channel_chat_created=False, chat=Chat(first_name='Yegor', id=93791246, last_name='Aprelsky', type=<ChatType.PRIVATE>, username='yegor_aprelsky'), date=datetime.datetime(2025, 11, 23, 8, 57, 41, tzinfo=<UTC>), delete_chat_photo=False, entities=(MessageEntity(length=18, offset=3, type=<MessageEntityType.BOLD>),), from_user=User(first_name='nocturna_dev', id=8438385382, is_bot=True, username='nocturna_dev_bot'), group_chat_created=False, message_id=182, supergroup_chat_created=False, text='📖 Интерпретация дня:\n\n🌟 День пронизан противоречивыми энергиями, где стремление к расширению и оптимизму встречается с внутренним напряжением и необходимостью переосмысления. Солнце в Стрельце дарует энтузиазм и веру в возможности, но его оппозиция с Ураном создаёт нестабильность и непредсказуемость в окружающей среде.\n\n💬 В общении и отношениях проявляется дуальность. Меркурий, находящийся в ретроградном движении, затрудняет ясное выражение мыслей — могут возникнуть недопонимания, особенно при обсуждении важных вопросов. Венера в Скорпионе добавляет интенсивности эмоциям, но её оппозиция с Ураном вносит элемент неожиданности в отношения. Лучше избежать поспешных выводов о чувствах других людей и дать время для уточнения информации. Луна в Козероге требует практичности в общении, хотя её квадрат с Нептуном может создавать иллюзии о намерениях окружающих.\n\n💼 На работе и в финансах день благоприятен благодаря трину Солнца с Юпитером и Сатурном. Это поддерживает ответственный подход к делам и способствует долгосрочному планированию. Однако ретроградный Меркурий советует избегать подписания новых контрактов без тщательной проверки деталей. Марс в Стрельце придаёт активности и амбициям, но требует канализации энергии в конкретные проекты, а не рассеивание по мелочам.\n\n🌙 Эмоциональное состояние может быть неустойчивым. Луна в Козероге стремится к стабильности и контролю, но множество напряжённых аспектов создают внутреннее беспокойство. Квадрат Луны с Нептуном может вызвать смутное беспокойство или чувство неопределённости. Важно не поддаваться тревогам и сосредоточиться на том, что реально можно контролировать.\n\n✨ В этот день рекомендуется медленнее двигаться в принятии важных решений. Проверяйте информацию дважды, особенно в письменном общении. Избегайте финансовых рисков и импульсивных покупок. Сосредоточьтесь на организации, планировании и укреплении основ. Физическая активность поможет гармонизировать противоречивые энергии.\n\n🎯 Совет дня: даже если день кажется запутанным, помните, что Солнце в Стрельце всегда верит в лучшее будущее. Используйте эту веру как якорь и не позволяйте неопределённости подорвать вашу уверенность.')
+2025-11-23 11:57:41,003 - telegram.ext.ExtBot - DEBUG - Exiting: send_message
+2025-11-23 11:57:41,003 - telegram.ext.ExtBot - DEBUG - Entering: delete_message
+2025-11-23 11:57:41,004 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'POST']>
+2025-11-23 11:57:41,005 - httpcore.http11 - DEBUG - send_request_headers.complete
+2025-11-23 11:57:41,005 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'POST']>
+2025-11-23 11:57:41,006 - httpcore.http11 - DEBUG - send_request_body.complete
+2025-11-23 11:57:41,007 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'POST']>
+2025-11-23 11:57:41,066 - httpcore.http11 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Server', b'nginx/1.18.0'), (b'Date', b'Sun, 23 Nov 2025 08:57:41 GMT'), (b'Content-Type', b'application/json'), (b'Content-Length', b'25'), (b'Connection', b'keep-alive'), (b'Strict-Transport-Security', b'max-age=31536000; includeSubDomains; preload'), (b'Access-Control-Allow-Origin', b'*'), (b'Access-Control-Allow-Methods', b'GET, POST, OPTIONS'), (b'Access-Control-Expose-Headers', b'Content-Length,Content-Type,Date,Server,Connection')])
+2025-11-23 11:57:41,067 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8438385382:AAHxYsqXtXoR6BIFIWPyF8xjLaY_MT8aLA0/deleteMessage "HTTP/1.1 200 OK"
+2025-11-23 11:57:41,067 - httpcore.http11 - DEBUG - receive_response_body.started request=<Request [b'POST']>
+2025-11-23 11:57:41,068 - httpcore.http11 - DEBUG - receive_response_body.complete
+2025-11-23 11:57:41,068 - httpcore.http11 - DEBUG - response_closed.started
+2025-11-23 11:57:41,068 - httpcore.http11 - DEBUG - response_closed.complete
+2025-11-23 11:57:41,069 - telegram.ext.ExtBot - DEBUG - True
+2025-11-23 11:57:41,069 - telegram.ext.ExtBot - DEBUG - Exiting: delete_message
+2025-11-23 11:57:46,889 - telegram.ext.Updater - DEBUG - Stopping Updater
+2025-11-23 11:57:46,890 - telegram.ext.Updater - DEBUG - Waiting background polling task to finish up.
+2025-11-23 11:57:46,890 - telegram.ext.Updater - DEBUG - Network loop retry getting Updates was cancelled
+2025-11-23 11:57:46,891 - httpcore.http11 - DEBUG - receive_response_headers.failed exception=CancelledError()
+2025-11-23 11:57:46,892 - httpcore.http11 - DEBUG - response_closed.started
+2025-11-23 11:57:46,893 - telegram.ext.Updater - DEBUG - Calling `get_updates` one more time to mark all fetched updates as read.
+2025-11-23 11:57:46,893 - telegram.ext.ExtBot - DEBUG - Entering: get_updates
+2025-11-23 11:57:46,895 - httpcore.http11 - DEBUG - response_closed.complete
+2025-11-23 11:57:46,896 - httpcore.connection - DEBUG - connect_tcp.started host='api.telegram.org' port=443 local_address=None timeout=5.0 socket_options=None
+2025-11-23 11:57:46,953 - httpcore.connection - DEBUG - connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x724fd7187090>
+2025-11-23 11:57:46,953 - httpcore.connection - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x724fd6f32d50> server_hostname='api.telegram.org' timeout=5.0
+2025-11-23 11:57:47,006 - httpcore.connection - DEBUG - start_tls.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x724fd6e8b190>
+2025-11-23 11:57:47,007 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'POST']>
+2025-11-23 11:57:47,007 - httpcore.http11 - DEBUG - send_request_headers.complete
+2025-11-23 11:57:47,008 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'POST']>
+2025-11-23 11:57:47,009 - httpcore.http11 - DEBUG - send_request_body.complete
+2025-11-23 11:57:47,010 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'POST']>
+2025-11-23 11:57:47,058 - httpcore.http11 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Server', b'nginx/1.18.0'), (b'Date', b'Sun, 23 Nov 2025 08:57:47 GMT'), (b'Content-Type', b'application/json'), (b'Content-Length', b'23'), (b'Connection', b'keep-alive'), (b'Strict-Transport-Security', b'max-age=31536000; includeSubDomains; preload'), (b'Access-Control-Allow-Origin', b'*'), (b'Access-Control-Allow-Methods', b'GET, POST, OPTIONS'), (b'Access-Control-Expose-Headers', b'Content-Length,Content-Type,Date,Server,Connection')])
+2025-11-23 11:57:47,059 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8438385382:AAHxYsqXtXoR6BIFIWPyF8xjLaY_MT8aLA0/getUpdates "HTTP/1.1 200 OK"
+2025-11-23 11:57:47,060 - httpcore.http11 - DEBUG - receive_response_body.started request=<Request [b'POST']>
+2025-11-23 11:57:47,061 - httpcore.http11 - DEBUG - receive_response_body.complete
+2025-11-23 11:57:47,062 - httpcore.http11 - DEBUG - response_closed.started
+2025-11-23 11:57:47,063 - httpcore.http11 - DEBUG - response_closed.complete
+2025-11-23 11:57:47,064 - telegram.ext.ExtBot - DEBUG - No new updates found.
+2025-11-23 11:57:47,065 - telegram.ext.ExtBot - DEBUG - ()
+2025-11-23 11:57:47,066 - telegram.ext.ExtBot - DEBUG - Exiting: get_updates
+2025-11-23 11:57:47,067 - telegram.ext.Updater - DEBUG - Updater.stop() is complete
+2025-11-23 11:57:47,067 - telegram.ext.Application - INFO - Application is stopping. This might take a moment.
+2025-11-23 11:57:47,068 - telegram.ext.Application - DEBUG - Waiting for update_queue to join
+2025-11-23 11:57:47,069 - telegram.ext.Application - DEBUG - Dropping pending updates
+2025-11-23 11:57:47,070 - telegram.ext.Application - DEBUG - Application stopped fetching of updates.
+2025-11-23 11:57:47,071 - telegram.ext.Application - DEBUG - Waiting for `create_task` calls to be processed
+2025-11-23 11:57:47,072 - telegram.ext.Application - INFO - Application.stop() complete
+2025-11-23 11:57:47,073 - httpcore.connection - DEBUG - close.started
+2025-11-23 11:57:47,074 - httpcore.connection - DEBUG - close.started
+2025-11-23 11:57:47,075 - httpcore.connection - DEBUG - close.complete
+2025-11-23 11:57:47,077 - httpcore.connection - DEBUG - close.complete
+2025-11-23 11:57:47,078 - telegram.ext.ExtBot - DEBUG - This Bot is already shut down. Returning.
+2025-11-23 11:57:47,079 - telegram.ext.Updater - DEBUG - Shut down of Updater complete

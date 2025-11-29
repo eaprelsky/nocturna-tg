@@ -6,7 +6,7 @@ import sys
 import jwt
 from datetime import datetime
 from telegram import Update
-from telegram.ext import Application, CommandHandler
+from telegram.ext import Application, CommandHandler, ConversationHandler, MessageHandler, filters
 from aiohttp import web
 
 from src.config import get_settings
@@ -16,7 +16,13 @@ from src.api.chart_service_client import ChartServiceClient
 from src.services.transit_service import TransitService
 from src.services.interpretation_service import InterpretationService
 from src.services.chart_service import ChartService
+from src.services.natal_service import NatalChartService
+from src.services.personal_transit_service import PersonalTransitService
 from src.bot.handlers import BotHandlers
+from src.bot.conversations import BirthDataConversation, BIRTH_DATE, BIRTH_TIME, BIRTH_LOCATION, CONFIRM_DATA
+from src.database.database import init_db, close_db
+from src.database.service import DatabaseService
+from src.database.database import get_session
 
 
 # Configure logging
@@ -78,6 +84,9 @@ async def run_polling(application: Application, settings) -> None:
     logger.info(f"Bot username: {settings.telegram_bot_username or 'Not set'}")
     logger.info("Bot is running. Press Ctrl+C to stop.")
 
+    # Initialize database
+    await init_db(settings.database_url, settings.database_echo)
+
     await application.initialize()
     await application.start()
     await application.updater.start_polling(allowed_updates=Update.ALL_TYPES)
@@ -92,6 +101,7 @@ async def run_polling(application: Application, settings) -> None:
         await application.updater.stop()
         await application.stop()
         await application.shutdown()
+        await close_db()
 
 
 async def run_webhook(application: Application, settings, handlers: BotHandlers) -> None:
@@ -113,6 +123,9 @@ async def run_webhook(application: Application, settings, handlers: BotHandlers)
     
     # Add health check endpoint
     aiohttp_app.router.add_get("/health", handlers.health_check)
+    
+    # Initialize database
+    await init_db(settings.database_url, settings.database_echo)
     
     # Initialize and start bot
     await application.initialize()
@@ -172,6 +185,7 @@ async def run_webhook(application: Application, settings, handlers: BotHandlers)
         await application.stop()
         await application.shutdown()
         await runner.cleanup()
+        await close_db()
 
 
 def main() -> None:
@@ -239,12 +253,30 @@ def main() -> None:
             interpretation_service=interpretation_service,
         )
 
+        # Initialize natal chart services (without database - DB access happens in handlers)
+        natal_service = NatalChartService(
+            nocturna_client=nocturna_client,
+            timezone=settings.timezone,
+            interpretation_service=interpretation_service,
+        )
+        personal_transit_service = PersonalTransitService(
+            nocturna_client=nocturna_client,
+            timezone=settings.timezone,
+            interpretation_service=interpretation_service,
+        )
+        logger.info("Natal chart services initialized")
+
         # Initialize bot handlers
         logger.info("Initializing bot handlers...")
         handlers = BotHandlers(
             transit_service=transit_service,
             chart_service=chart_service,
+            natal_service=natal_service,
+            personal_transit_service=personal_transit_service,
         )
+
+        # Initialize conversation handler
+        birth_data_conversation = BirthDataConversation(nocturna_client)
 
         # Create application
         logger.info("Creating Telegram application...")
@@ -256,6 +288,37 @@ def main() -> None:
         application.add_handler(CommandHandler("transit", handlers.transit_command))
         application.add_handler(CommandHandler("transit_planets", handlers.transit_planets_command))
         application.add_handler(CommandHandler("transit_aspects", handlers.transit_aspects_command))
+        
+        # Register natal chart commands
+        application.add_handler(CommandHandler("my_natal", handlers.my_natal_command))
+        application.add_handler(CommandHandler("my_transit", handlers.my_transit_command))
+        application.add_handler(CommandHandler("profile", handlers.profile_command))
+        application.add_handler(CommandHandler("clear_profile", handlers.clear_profile_command))
+        
+        # Register conversation handler for /natal
+        natal_conv_handler = ConversationHandler(
+            entry_points=[CommandHandler("natal", birth_data_conversation.start_natal_setup)],
+            states={
+                BIRTH_DATE: [
+                    CommandHandler("natal", birth_data_conversation.start_natal_setup),
+                    MessageHandler(filters.TEXT & ~filters.COMMAND, birth_data_conversation.receive_birth_date)
+                ],
+                BIRTH_TIME: [
+                    CommandHandler("natal", birth_data_conversation.start_natal_setup),
+                    MessageHandler(filters.TEXT & ~filters.COMMAND, birth_data_conversation.receive_birth_time)
+                ],
+                BIRTH_LOCATION: [
+                    CommandHandler("natal", birth_data_conversation.start_natal_setup),
+                    MessageHandler(filters.TEXT & ~filters.COMMAND, birth_data_conversation.receive_birth_location)
+                ],
+                CONFIRM_DATA: [
+                    CommandHandler("natal", birth_data_conversation.start_natal_setup),
+                    MessageHandler(filters.TEXT & ~filters.COMMAND, birth_data_conversation.confirm_and_save)
+                ],
+            },
+            fallbacks=[CommandHandler("cancel", birth_data_conversation.cancel_conversation)],
+        )
+        application.add_handler(natal_conv_handler)
 
         # Register error handler
         application.add_error_handler(handlers.error_handler)

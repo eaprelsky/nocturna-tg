@@ -12,6 +12,15 @@ aiohttp==3.9.1
 python-dateutil==2.8.2
 pytz==2024.1
 
+# Database
+sqlalchemy==2.0.25
+asyncpg==0.29.0
+alembic==1.13.1
+
+# Geocoding
+geopy==2.4.1
+timezonefinder==6.5.0
+
 # Development dependencies
 pytest==8.0.0
 pytest-asyncio==0.23.5
